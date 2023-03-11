@@ -24,7 +24,7 @@ public class FunctionNode extends Node{
     /**
      * list of statements executed by the function
      */
-    LinkedList<Node> statements;
+    LinkedList<StatementNode> statements;
 
     /**
      * empty constucter for function node
@@ -37,10 +37,11 @@ public class FunctionNode extends Node{
      * @param parameters list of function parameters
      * @param variables list of local function vraiables
      */
-    public FunctionNode(String name, LinkedList<VariableNode> parameters, LinkedList<VariableNode> variables){
+    public FunctionNode(String name, LinkedList<VariableNode> parameters, LinkedList<VariableNode> variables, LinkedList<StatementNode> statements){
         this.functionName = name;
         this.parameters = parameters;
         this.variables = variables;
+        this.statements = statements;
     }
 
     /**
@@ -88,19 +89,23 @@ public class FunctionNode extends Node{
      * @return a string listing, the name of the function, the parameters and the variables, statements coming soon
      */
     public String toString() {
-        String s = "function: " + this.functionName + "\nparameters: ";
+        String s = "function: " + this.functionName + "\nPARAMETERS: ------------------------------------------------------------";
 
-        while(!this.parameters.isEmpty()){
-            s += "\n" + this.parameters.remove();
+        for(int i = 0; i < this.parameters.size(); i++){
+            s += "\n" + this.parameters.get(i);
         }
 
-        s += "\nvariables: ";
+        s += "\nVARIABLES: ------------------------------------------------------------";
 
-        while(!this.variables.isEmpty()){
-            s += "\n" + this.variables.remove();
+        for(int i = 0; i < this.variables.size(); i++){
+            s += "\n" + this.variables.get(i);
         }
 
+        s += "\nSTATEMENTS: ------------------------------------------------------------";
 
+        for(int i = 0; i < this.statements.size(); i++){
+            s += "\n" + this.statements.get(i);
+        }
         return s;
 
     }

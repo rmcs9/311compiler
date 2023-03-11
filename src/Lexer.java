@@ -111,9 +111,9 @@ public class Lexer {
                         }else if(input.get(i) == ')'){
                             machine.setRPAREN();
                         }else if (input.get(i) == '[') {
-                            machine.setLBracket();
+                            machine.setLBRACKET();
                         }else if(input.get(i) == ']'){
-                            machine.setRPAREN();
+                            machine.setRBRACKET();
                         }else if (input.get(i) == '"') {
                             machine.setStringLiteral();
                             i++;

@@ -44,7 +44,5 @@ public class Shank {
         System.out.println("Parse input successful");
         Node test = parser.parse();
         System.out.printf(test.toString());
-
-
     }
 }

@@ -70,11 +70,11 @@ public class State {
         this.current = stateType.COMMENT;
     }
 
-    public void setLBracket(){
+    public void setLBRACKET(){
         this.current = stateType.LBRACKET;
     }
 
-    public void setRBracket(){
+    public void setRBRACKET(){
         this.current = stateType.RBRACKET;
     }
 

@@ -44,8 +44,8 @@ public class ProgramNode extends Node{
     public String toString() {
         String s = "\nFunctions: \n";
 
-        while(!functionNames.isEmpty()){
-            s += "\n" + functions.get(functionNames.remove());
+        for(int i = 0; i < functionNames.size(); i++){
+            s += "\n" + functions.get(functionNames.get(i));
 
             s += "\n";
         }

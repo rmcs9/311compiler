@@ -10,7 +10,7 @@ public class VariableNode extends Node{
 
     private String variableName;
 
-    private Node variableType;
+    private VariableType type;
 
     private boolean changeable;
 
@@ -19,6 +19,10 @@ public class VariableNode extends Node{
     private int from = 0;
     private int to = 0;
 
+    public enum VariableType{
+        STRING, CHARACTER, INTEGER, REAL, BOOLEAN, ARRAY
+    }
+
 
     /**
      * special constructor for variable nodes, used for constants in function parameters
@@ -26,9 +30,9 @@ public class VariableNode extends Node{
      * @param ty variable type
      * @param ch changeable type
      */
-    public VariableNode(String n, Node ty, boolean ch){
+    public VariableNode(String n, VariableType ty, boolean ch){
         this.variableName = n;
-        this.variableType = ty;
+        this.type = ty;
         this.changeable = ch;
     }
 
@@ -38,9 +42,9 @@ public class VariableNode extends Node{
      * @param ty type of the constant
      * @param v value for the constant
      */
-    public VariableNode(String n, Node ty, Node v){
+    public VariableNode(String n, VariableType ty, Node v){
         this.variableName = n;
-        this.variableType = ty;
+        this.type = ty;
         this.value = v;
         this.changeable = false;
     }
@@ -52,9 +56,9 @@ public class VariableNode extends Node{
      * @param f starting index of the array
      * @param t ending index of the array
      */
-    public VariableNode(String n, Node ty, int f, int t, boolean ch) {
+    public VariableNode(String n, VariableType ty, int f, int t, boolean ch) {
         this.variableName = n;
-        this.variableType = ty;
+        this.type = ty;
         this.from = f;
         this.to = t;
         this.changeable = ch;
@@ -66,10 +70,10 @@ public class VariableNode extends Node{
      */
     public String toString() {
         if(this.to != 0){
-            return this.variableName + " = array of " + this.variableType + " changeable = " + this.changeable + " from " + this.from + " to " + this.to;
+            return this.variableName + " = array of " + this.type + " changeable = " + this.changeable + " from " + this.from + " to " + this.to;
         }
         else{
-            return this.variableName + " = type: " + this.variableType + " value = " + this.value + " changeable = " + this.changeable;
+            return this.variableName + " = type: " + this.type + " value = " + this.value + " changeable = " + this.changeable;
         }
     }
 }

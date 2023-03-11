@@ -39,6 +39,6 @@ public class MathOpNode extends Node{
      * @return a formatted string for the math op node
      */
     public String toString() {
-        return "MathOpNode(" + this.operator + ", " + this.leftNode + ", " + this.rightNode + ")";
+        return "MathOpNode({" + this.leftNode + "}, " + this.operator + ", {" + this.rightNode + "})";
     }
 }
