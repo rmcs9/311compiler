@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 2
+ * Assignment 4
  * Ryan McSweeney
  * RM483514
- * 2/12/23
+ * 3/5/23
  */
 
 public class State {

@@ -1,0 +1,51 @@
+define start (args : array of string)
+constants pi = 3.141
+variables a,b,c : integer
+
+define someFunction (readOnly:integer; var changeable : integer; alsoReadOnly : integer)
+    3+4-5
+
+define end()
+constants myName = "mphipps"
+constants pi = 3.141
+constants class = "ICSI311", goodGrade = 95
+
+
+define new()
+variables variable1, a, foo9 : integer
+variables name, address, country : string
+
+define test()
+
+define testFunction(var abc, ry : string; test1 : integer)
+constants eee = true
+constants gg = false
+variables gh : string
+
+define test()
+variables free, notFree : real
+constants r = 123, test = 123
+    54 + 28
+
+
+define function(args : array of string)
+    64 - 8 + 25
+
+
+define newFunction(test : array of real; var re : integer)
+variables calc : character
+constants pi = 3.14, word = "word"
+variables tree : string
+
+
+define treeFunction()
+constants u = 1, tree = 't', t = "tree"
+variables test, test1, test2 : real
+    54 - 26 mod 1
+    634 * 48 / 2
+
+
+
+
+
+

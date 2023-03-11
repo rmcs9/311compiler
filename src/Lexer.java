@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 2
+ * Assignment 4
  * Ryan McSweeney
  * RM483514
- * 2/12/23
+ * 3/5/23
  */
 
 import java.util.HashMap;
@@ -53,8 +53,8 @@ public class Lexer {
             knownWords.put("integer", Token.tokenType.INTEGER);
             knownWords.put("real", Token.tokenType.REAL);
             knownWords.put("boolean", Token.tokenType.BOOLEAN);
-            knownWords.put("character", Token.tokenType.CHARACTER);
-            knownWords.put("string", Token.tokenType.STRING);
+            knownWords.put("character", Token.tokenType.CHARACTERLITERAL);
+            knownWords.put("string", Token.tokenType.STRINGLITERAL);
             knownWords.put("write", Token.tokenType.WRITE);
             knownWords.put("from", Token.tokenType.FROM);
             knownWords.put("to", Token.tokenType.TO);
@@ -64,6 +64,9 @@ public class Lexer {
             knownWords.put("and", Token.tokenType.AND);
             knownWords.put("or", Token.tokenType.OR);
             knownWords.put("then", Token.tokenType.THEN);
+            knownWords.put("of", Token.tokenType.OF);
+            knownWords.put("true", Token.tokenType.TRUE);
+            knownWords.put("false", Token.tokenType.FALSE);
 
             State machine = new State();
             int i = 0;
@@ -120,7 +123,7 @@ public class Lexer {
                                 throw new SyntaxErrorException(input.get(i + 1), lineCounter, "MORE THAN 1 CHARACTER INSIDE CHAR QUOTE");
                             }
                             else{
-                            tokens.add(new Token(Token.tokenType.CHARACTER, input.get(i).toString(), lineCounter));
+                            tokens.add(new Token(Token.tokenType.CHARACTERLITERAL, input.get(i).toString(), lineCounter));
                             i = i + 2;
                             machine.setStart();
                             }
@@ -186,6 +189,7 @@ public class Lexer {
 
                                 case ';':
                                     tokens.add(new Token(Token.tokenType.SEMICOLON, lineCounter));
+                                    i++;
                                     break;
 
                                 default:
@@ -237,7 +241,6 @@ public class Lexer {
                             tokens.add(new Token(Token.tokenType.NUMBER, accumulator.toString(), lineCounter));
                             accumulator = new String();
                             machine.setStart();
-                            i++;
                         }
                         break;
                     case "COMMENT":
@@ -276,7 +279,7 @@ public class Lexer {
                             accumulator += input.get(i);
                             i++;
                         } else {
-                            tokens.add(new Token(Token.tokenType.STRING, accumulator, lineCounter));
+                            tokens.add(new Token(Token.tokenType.STRINGLITERAL, accumulator, lineCounter));
                             accumulator = new String();
                             machine.setStart();
                             i++;
@@ -307,6 +310,9 @@ public class Lexer {
             if(!tokens.isEmpty()) {
                 tokens.add(new Token(Token.tokenType.ENDOFLINE, lineCounter));
             }
+            lineCounter++;
+        }
+        else {
             lineCounter++;
         }
     }

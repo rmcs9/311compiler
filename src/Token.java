@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 2
+ * Assignment 4
  * Ryan McSweeney
  * RM483514
- * 2/12/23
+ * 3/5/23
  */
 
 
@@ -36,8 +36,9 @@ public class Token {
      */
     public enum tokenType{
         IDENTIFIER, NUMBER, ENDOFLINE, WHILE, FOR, IF, ELSE, ELSIF, DEFINE, CONSTANTS, VARIABLES, ARRAY, INTEGER, REAL,
-        BOOLEAN, CHARACTER, STRING, WRITE, FROM, TO, VAR, MOD, NOT, AND, OR, COMMENT, PLUS, MINUS, MULTIPLY, DIVIDE, COLON, COMMA, ASSIGNMENT,
+        BOOLEAN, CHARACTERLITERAL, STRINGLITERAL, WRITE, FROM, TO, VAR, MOD, NOT, AND, OR, COMMENT, PLUS, MINUS, MULTIPLY, DIVIDE, COLON, COMMA, ASSIGNMENT,
         EQUALS, NOTEQUALS, GREATERTHAN, LESSTHAN, GREATERTHANEQUALTO, LESSTHANEQUALTO, INDENT, DEDENT, THEN, SEMICOLON, LPAREN, RPAREN, LBRACKET, RBRACKET
+        , OF, TRUE, FALSE
 
     }
 
@@ -61,6 +62,10 @@ public class Token {
 
     public String getTokenContents(){
         return this.tokenContents;
+    }
+
+    public int getTokenLine(){
+        return this.tokenLine;
     }
 
     /**

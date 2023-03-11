@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 3
+ * Assignment 4
  * Ryan McSweeney
  * RM483514
- * 2/26/23
+ * 3/5/23
  */
 
 public class IntegerNode extends Node{
@@ -17,6 +17,8 @@ public class IntegerNode extends Node{
     public IntegerNode(int member){
         this.integer = member;
     }
+
+    public IntegerNode(){}
 
     /**
      * getter method for the integer member of the node

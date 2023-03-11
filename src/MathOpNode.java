@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 3
+ * Assignment 4
  * Ryan McSweeney
  * RM483514
- * 2/26/23
+ * 3/5/23
  */
 
 public class MathOpNode extends Node{

@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 2
+ * Assignment 4
  * Ryan McSweeney
  * RM483514
- * 2/12/23
+ * 3/5/23
  */
 
 import java.io.File;
@@ -43,6 +43,7 @@ public class Shank {
         Parser parser = new Parser(lex.getTokens());
         System.out.println("Parse input successful");
         Node test = parser.parse();
+        System.out.printf(test.toString());
 
 
     }

@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 3
+ * Assignment 4
  * Ryan McSweeney
  * RM483514
- * 2/26/23
+ * 3/5/23
  */
 
 public class RealNode extends Node{
@@ -16,6 +16,10 @@ public class RealNode extends Node{
      */
     public RealNode(float member){
         this.real = member;
+    }
+
+    public RealNode(){
+
     }
 
     /**
