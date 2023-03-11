@@ -1,5 +1,3 @@
-
-
 /**
  * ICSI 311
  * Assignment 2
@@ -18,7 +16,7 @@ public class State {
      * enum for the type of state
      */
     public enum stateType{
-        WORD, NUMBER, PERIOD, START, OPERATOR, STRINGLITERAL, CHARLITERAL, COMMENT, BRACKET, PAREN
+        WORD, NUMBER, PERIOD, START, OPERATOR, STRINGLITERAL, CHARLITERAL, COMMENT, LPAREN, RPAREN, LBRACKET, RBRACKET
     }
 
     /**
@@ -72,12 +70,20 @@ public class State {
         this.current = stateType.COMMENT;
     }
 
-    public void setBracket(){
-        this.current = stateType.BRACKET;
+    public void setLBracket(){
+        this.current = stateType.LBRACKET;
     }
 
-    public void setParan(){
-        this.current = stateType.PAREN;
+    public void setRBracket(){
+        this.current = stateType.RBRACKET;
+    }
+
+    public void setLParan(){
+        this.current = stateType.LPAREN;
+    }
+
+    public void setRPAREN(){
+        this.current = stateType.RPAREN;
     }
     /**
      * getter method for the current state

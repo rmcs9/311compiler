@@ -1,5 +1,3 @@
-
-
 /**
  * ICSI 311
  * Assignment 2

@@ -1,4 +1,4 @@
- /**
+/**
  * ICSI 311
  * Assignment 2
  * Ryan McSweeney
@@ -6,6 +6,7 @@
  * 2/12/23
  */
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -38,6 +39,10 @@ public class Shank {
         }
         System.out.println("Lexing Successful!");
         lex.tokenPrint();
+
+        Parser parser = new Parser(lex.getTokens());
+        System.out.println("Parse input successful");
+        Node test = parser.parse();
 
 
     }

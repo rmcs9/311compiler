@@ -1,5 +1,3 @@
-
-
 /**
  * ICSI 311
  * Assignment 2
@@ -10,6 +8,9 @@
 
 
 public class Token {
+
+    public Token(){
+    }
     /**
      * Constructer for a token
      * @param type enum for the type of token that is being created
@@ -35,8 +36,8 @@ public class Token {
      */
     public enum tokenType{
         IDENTIFIER, NUMBER, ENDOFLINE, WHILE, FOR, IF, ELSE, ELSIF, DEFINE, CONSTANTS, VARIABLES, ARRAY, INTEGER, REAL,
-        BOOLEAN, CHARACTER, STRING, WRITE, FROM, TO, VAR, MOD, NOT, AND, OR, COMMENT, PARAN, BRACKET, PLUS, MINUS, MULTIPLY, DIVIDE, COLON, COMMA, ASSIGNMENT,
-        EQUALS, NOTEQUALS, GREATERTHAN, LESSTHAN, GREATERTHANEQUALTO, LESSTHANEQUALTO, INDENT, DEDENT, THEN
+        BOOLEAN, CHARACTER, STRING, WRITE, FROM, TO, VAR, MOD, NOT, AND, OR, COMMENT, PLUS, MINUS, MULTIPLY, DIVIDE, COLON, COMMA, ASSIGNMENT,
+        EQUALS, NOTEQUALS, GREATERTHAN, LESSTHAN, GREATERTHANEQUALTO, LESSTHANEQUALTO, INDENT, DEDENT, THEN, SEMICOLON, LPAREN, RPAREN, LBRACKET, RBRACKET
 
     }
 
@@ -52,6 +53,14 @@ public class Token {
         else{
             return this.tokType.toString() + "(" + this.tokenContents + ")";
         }
+    }
+
+    public tokenType getTokenType(){
+        return this.tokType;
+    }
+
+    public String getTokenContents(){
+        return this.tokenContents;
     }
 
     /**

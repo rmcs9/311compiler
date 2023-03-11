@@ -1,4 +1,4 @@
- /**
+/**
  * ICSI 311
  * Assignment 2
  * Ryan McSweeney
@@ -35,6 +35,8 @@ public class Lexer {
      *
      * @param line String representing one line in the file
      */
+
+    int previousIndent = 0;
     public void lex(String line) {
         if (!line.isEmpty()) {
             //hash map declaration
@@ -75,38 +77,20 @@ public class Lexer {
             //accumaluted word
             String accumulator = new String();
 
-            //determines if incoming line needs to indented or dedented
-            int spaceCount = 0;
-            if ((input.get(i) == ' ' && input.get(i + 1) == ' ' && input.get(i + 2) == ' ' && input.get(i + 3) == ' ') || tabCounter != 0) {
-                //counts the indents of the incoming line
-                while (input.get(i) == ' ') {
-                    spaceCount++;
-                    i++;
-                }
-
-                //the following bloc determines whether the line needs indent tokens or dedent tokens
-                int j = spaceCount;
-                if (spaceCount > tabCounter) {
-                    int k = spaceCount - tabCounter;
-                    while (k != 0) {
-                        tokens.add(new Token(Token.tokenType.INDENT, lineCounter));
-                        k = k - 4;
-                    }
-                } else if (spaceCount < tabCounter) {
-                    int k = tabCounter - spaceCount;
-                    while (k != 0) {
-                        tokens.add(new Token(Token.tokenType.DEDENT, lineCounter));
-                        k = k - 4;
-                    }
-                }
-                tabCounter = j;
-            }
 
             while (i < input.size()) {
                 //checks if lexer is still inside a possible multiline comment
                 if (inComment) {
                     machine.setComment();
                 }
+                int currentIndent = getIndent(line);
+                for(int k = 0; k < currentIndent - previousIndent; k++){
+                    tokens.add(new Token(Token.tokenType.INDENT, lineCounter));
+                }
+                for(int k = 0; k < previousIndent - currentIndent; k++){
+                    tokens.add(new Token(Token.tokenType.DEDENT, lineCounter));
+                }
+                previousIndent = currentIndent;
                 switch (machine.getState()) {
                     //Start state of state machine
                     case "START":
@@ -120,12 +104,14 @@ public class Lexer {
                             machine.setComment();
                             i++;
                         } else if (input.get(i) == '(') {
-                            machine.setParan();
-                            i++;
-                        } else if (input.get(i) == '[') {
-                            machine.setBracket();
-                            i++;
-                        } else if (input.get(i) == '"') {
+                            machine.setLParan();
+                        }else if(input.get(i) == ')'){
+                            machine.setRPAREN();
+                        }else if (input.get(i) == '[') {
+                            machine.setLBracket();
+                        }else if(input.get(i) == ']'){
+                            machine.setRPAREN();
+                        }else if (input.get(i) == '"') {
                             machine.setStringLiteral();
                             i++;
                         } else if (input.get(i) == '\'') {
@@ -197,6 +183,11 @@ public class Lexer {
                                     }
                                     i++;
                                     break;
+
+                                case ';':
+                                    tokens.add(new Token(Token.tokenType.SEMICOLON, lineCounter));
+                                    break;
+
                                 default:
                                     throw new SyntaxErrorException(input.get(i), lineCounter);
                             }
@@ -260,29 +251,25 @@ public class Lexer {
                             inComment = false;
                         }
                         break;
-                    case "PAREN":
-                        if (input.get(i) != ')') {
-                            accumulator += input.get(i);
-                            i++;
-                        } else {
-                            Lexer parenLex = new Lexer();
-                            parenLex.lex(accumulator);
-                            tokens.add(new Token(Token.tokenType.PARAN, parenLex.toString(), lineCounter));
-                            accumulator = new String();
-                            machine.setStart();
-                            i++;
-                        }
+                    case "LPAREN":
+                       tokens.add(new Token(Token.tokenType.LPAREN, lineCounter));
+                       machine.setStart();
+                       i++;
                         break;
-                    case "BRACKET":
-                        if (input.get(i) != ']') {
-                            accumulator += input.get(i);
-                            i++;
-                        } else {
-                            tokens.add(new Token(Token.tokenType.BRACKET, accumulator, lineCounter));
-                            accumulator = new String();
-                            machine.setStart();
-                            i++;
-                        }
+                    case "RPAREN":
+                        tokens.add(new Token(Token.tokenType.RPAREN, lineCounter));
+                        machine.setStart();
+                        i++;
+                        break;
+                    case "LBRACKET":
+                        tokens.add(new Token(Token.tokenType.LBRACKET, lineCounter));
+                        machine.setStart();
+                        i++;
+                        break;
+                    case "RBRACKET":
+                        tokens.add(new Token(Token.tokenType.RBRACKET, lineCounter));
+                        machine.setStart();
+                        i++;
                         break;
                     case "STRINGLITERAL":
                         if (input.get(i) != '"') {
@@ -344,6 +331,27 @@ public class Lexer {
             s += tokens.get(i) + " ";
         }
         return s;
+    }
+
+    public LinkedList<Token> getTokens(){
+        return this.tokens;
+    }
+
+    public int getIndent(String line){
+        int i = 0;
+        for(char j: line.toCharArray()){
+            if(j == ' '){
+                i++;
+            }
+            else if(j == '\t'){
+                i += 4;
+            }
+            else{
+                return i/4;
+            }
+
+        }
+        return i/4;
     }
 
 
