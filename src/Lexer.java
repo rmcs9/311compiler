@@ -1,11 +1,12 @@
-/**
+ /**
  * ICSI 311
- * Assignment 1
+ * Assignment 2
  * Ryan McSweeney
  * RM483514
- * 2/3/23
+ * 2/12/23
  */
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,111 +15,336 @@ public class Lexer {
     /**
      * linked list containing all lexed tokens
      */
-    private static LinkedList<Token> tokens = new LinkedList<>();
+    private LinkedList<Token> tokens = new LinkedList<Token>();
 
     /**
-     * lex method containing state machine "machine" used to lex incoming lines of text and
-     * generate new tokens
-     * @param line a String representing 1 line from a shank file
+     * variable that tracks what line the lexer is on in the file
      */
-    public static void lex(String line){
-        State machine = new State();
-        int i = 0;
-        List<Character> input = new LinkedList<>();
-        char[] arr = line.toCharArray();
-        //for loop used to translate incoming line of text into a linked list of characters
-        for(int j = 0; j < arr.length; j++){
-            input.add(j, arr[j]);
-        }
-        //accumaluted word
-        String accumulator = new String();
+    private int lineCounter = 1;
+    /**
+     * integer that tracks the number of spaces/indents on the previous line
+     */
+    private int tabCounter = 0;
+    /**
+     * determines whether the lexer is in the middle of a multi line comment
+     */
+    private static boolean inComment;
 
-            while(i < input.size()) {
-                if(!Character.isDigit(input.get(i)) && !Character.isLetter(input.get(i))
-                    && input.get(i) != '.' && input.get(i) != ' ' ){
-                    throw new LexerException("Unknown character detected, lexing process aborted.");
+    /**
+     * lexer method lexes the incoming line in the file and adds all tokens to the linked list
+     *
+     * @param line String representing one line in the file
+     */
+    public void lex(String line) {
+        if (!line.isEmpty()) {
+            //hash map declaration
+            HashMap<String, Token.tokenType> knownWords = new HashMap<String, Token.tokenType>();
+            knownWords.put("while", Token.tokenType.WHILE);
+            knownWords.put("for", Token.tokenType.FOR);
+            knownWords.put("if", Token.tokenType.IF);
+            knownWords.put("else", Token.tokenType.ELSE);
+            knownWords.put("elsif", Token.tokenType.ELSIF);
+            knownWords.put("define", Token.tokenType.DEFINE);
+            knownWords.put("constants", Token.tokenType.CONSTANTS);
+            knownWords.put("variables", Token.tokenType.VARIABLES);
+            knownWords.put("array", Token.tokenType.ARRAY);
+            knownWords.put("integer", Token.tokenType.INTEGER);
+            knownWords.put("real", Token.tokenType.REAL);
+            knownWords.put("boolean", Token.tokenType.BOOLEAN);
+            knownWords.put("character", Token.tokenType.CHARACTER);
+            knownWords.put("string", Token.tokenType.STRING);
+            knownWords.put("write", Token.tokenType.WRITE);
+            knownWords.put("from", Token.tokenType.FROM);
+            knownWords.put("to", Token.tokenType.TO);
+            knownWords.put("var", Token.tokenType.VAR);
+            knownWords.put("mod", Token.tokenType.MOD);
+            knownWords.put("not", Token.tokenType.NOT);
+            knownWords.put("and", Token.tokenType.AND);
+            knownWords.put("or", Token.tokenType.OR);
+            knownWords.put("then", Token.tokenType.THEN);
+
+            State machine = new State();
+            int i = 0;
+            List<Character> input = new LinkedList<>();
+            char[] arr = line.toCharArray();
+            //for loop used to translate incoming line of text into a linked list of characters
+            for (int j = 0; j < arr.length; j++) {
+                input.add(j, arr[j]);
+            }
+
+            //accumaluted word
+            String accumulator = new String();
+
+            //determines if incoming line needs to indented or dedented
+            int spaceCount = 0;
+            if ((input.get(i) == ' ' && input.get(i + 1) == ' ' && input.get(i + 2) == ' ' && input.get(i + 3) == ' ') || tabCounter != 0) {
+                //counts the indents of the incoming line
+                while (input.get(i) == ' ') {
+                    spaceCount++;
+                    i++;
                 }
-                else {
-                    switch (machine.getState()) {
-                        //Start state of state machine
-                        case "START":
-                            if (Character.isLetter(input.get(i))) {
-                                machine.setWord();
-                            } else if (Character.isDigit(input.get(i))) {
-                                machine.setNumber();
-                            } else if (input.get(i) == '.') {
-                                machine.setPeriod();
-                            }
-                            else if(input.get(i) == ' '){
-                                machine.setStart();
-                                i++;
-                            }
-                            break;
-                        //Word state of state machine
-                        case "WORD":
-                            if (Character.isLetter(input.get(i)) || Character.isDigit(input.get(i))) {
-                                accumulator += input.get(i);
-                                i++;
-                            } else if (input.get(i) == ' ' || input.get(i) == '.') {
-                                tokens.add(new Token(Token.tokenType.WORD, accumulator.toString()));
-                                accumulator = new String();
-                                machine.setStart();
-                                i++;
-                            }
-                            break;
-                        //Number state of the state machine
-                        case "NUMBER":
-                            if (Character.isDigit(input.get(i))) {
-                                accumulator += input.get(i);
-                                i++;
-                            } else if (input.get(i) == '.') {
-                                machine.setPeriod();
-                                accumulator += input.get(i);
-                                i++;
-                            } else {
-                                tokens.add(new Token(Token.tokenType.NUMBER, accumulator.toString()));
-                                accumulator = new String();
-                                machine.setStart();
-                                i++;
-                            }
-                            break;
-                        //Period state of the state machine
-                        case "PERIOD":
-                            if (Character.isDigit(input.get(i))) {
-                                accumulator += input.get(i);
-                                i++;
-                            } else {
-                                tokens.add(new Token(Token.tokenType.NUMBER, accumulator.toString()));
-                                accumulator = new String();
-                                machine.setStart();
-                                i++;
-                            }
-                            break;
+
+                //the following bloc determines whether the line needs indent tokens or dedent tokens
+                int j = spaceCount;
+                if (spaceCount > tabCounter) {
+                    int k = spaceCount - tabCounter;
+                    while (k != 0) {
+                        tokens.add(new Token(Token.tokenType.INDENT, lineCounter));
+                        k = k - 4;
                     }
+                } else if (spaceCount < tabCounter) {
+                    int k = tabCounter - spaceCount;
+                    while (k != 0) {
+                        tokens.add(new Token(Token.tokenType.DEDENT, lineCounter));
+                        k = k - 4;
+                    }
+                }
+                tabCounter = j;
+            }
+
+            while (i < input.size()) {
+                //checks if lexer is still inside a possible multiline comment
+                if (inComment) {
+                    machine.setComment();
+                }
+                switch (machine.getState()) {
+                    //Start state of state machine
+                    case "START":
+                        if (Character.isLetter(input.get(i))) {
+                            machine.setWord();
+                        } else if (Character.isDigit(input.get(i))) {
+                            machine.setNumber();
+                        } else if (input.get(i) == '.') {
+                            machine.setPeriod();
+                        } else if (input.get(i) == '{') {
+                            machine.setComment();
+                            i++;
+                        } else if (input.get(i) == '(') {
+                            machine.setParan();
+                            i++;
+                        } else if (input.get(i) == '[') {
+                            machine.setBracket();
+                            i++;
+                        } else if (input.get(i) == '"') {
+                            machine.setStringLiteral();
+                            i++;
+                        } else if (input.get(i) == '\'') {
+                            i++;
+                            if(input.get(i + 1) != '\''){
+                                throw new SyntaxErrorException(input.get(i + 1), lineCounter, "MORE THAN 1 CHARACTER INSIDE CHAR QUOTE");
+                            }
+                            else{
+                            tokens.add(new Token(Token.tokenType.CHARACTER, input.get(i).toString(), lineCounter));
+                            i = i + 2;
+                            machine.setStart();
+                            }
+                        } else if (input.get(i) == ' ') {
+                            machine.setStart();
+                            i++;
+                        } else {
+                            switch (input.get(i)) {
+                                case '+':
+                                    tokens.add(new Token(Token.tokenType.PLUS, lineCounter));
+                                    i++;
+                                    break;
+                                case '-':
+                                    tokens.add(new Token(Token.tokenType.MINUS, lineCounter));
+                                    i++;
+                                    break;
+                                case '*':
+                                    tokens.add(new Token(Token.tokenType.MULTIPLY, lineCounter));
+                                    i++;
+                                    break;
+                                case '/':
+                                    tokens.add(new Token(Token.tokenType.DIVIDE, lineCounter));
+                                    i++;
+                                    break;
+                                case ':':
+                                    if (input.get(i + 1) == '=') {
+                                        tokens.add(new Token(Token.tokenType.ASSIGNMENT, lineCounter));
+                                        i++;
+                                    } else {
+                                        tokens.add(new Token(Token.tokenType.COLON, lineCounter));
+                                    }
+                                    i++;
+                                    break;
+                                case ',':
+                                    tokens.add(new Token(Token.tokenType.COMMA, lineCounter));
+                                    i++;
+                                    break;
+                                case '=':
+                                    tokens.add(new Token(Token.tokenType.EQUALS, lineCounter));
+                                    i++;
+                                    break;
+                                case '<':
+                                    if (input.get(i + 1) == '>') {
+                                        tokens.add(new Token(Token.tokenType.NOTEQUALS, lineCounter));
+                                        i++;
+                                    } else if (input.get(i + 1) == '=') {
+                                        tokens.add(new Token(Token.tokenType.LESSTHANEQUALTO, lineCounter));
+                                        i++;
+                                    } else {
+                                        tokens.add(new Token(Token.tokenType.LESSTHAN, lineCounter));
+                                    }
+                                    i++;
+                                    break;
+                                case '>':
+                                    if (input.get(i + 1) == '=') {
+                                        tokens.add(new Token(Token.tokenType.GREATERTHANEQUALTO, lineCounter));
+                                        i++;
+                                    } else {
+                                        tokens.add(new Token(Token.tokenType.GREATERTHAN, lineCounter));
+                                    }
+                                    i++;
+                                    break;
+                                default:
+                                    throw new SyntaxErrorException(input.get(i), lineCounter);
+                            }
+                        }
+                        break;
+                    //Word state of state machine
+                    case "WORD":
+                        if (Character.isLetter(input.get(i)) || Character.isDigit(input.get(i))) {
+                            accumulator += input.get(i);
+                            i++;
+                        } else {
+                            if (knownWords.get(accumulator) != null) {
+                                tokens.add(new Token(knownWords.get(accumulator), lineCounter));
+                                accumulator = new String();
+                                machine.setStart();
+
+                            } else {
+                                tokens.add(new Token(Token.tokenType.IDENTIFIER, accumulator.toString(), lineCounter));
+                                accumulator = new String();
+                                machine.setStart();
+
+                            }
+                        }
+                        break;
+                    //Number state of the state machine
+                    case "NUMBER":
+                        if (Character.isDigit(input.get(i))) {
+                            accumulator += input.get(i);
+                            i++;
+                        } else if (input.get(i) == '.') {
+                            machine.setPeriod();
+                            accumulator += input.get(i);
+                            i++;
+                        } else {
+                            tokens.add(new Token(Token.tokenType.NUMBER, accumulator.toString(), lineCounter));
+                            accumulator = new String();
+                            machine.setStart();
+
+                        }
+                        break;
+                    //Period state of the state machine
+                    case "PERIOD":
+                        if (Character.isDigit(input.get(i))) {
+                            accumulator += input.get(i);
+                            i++;
+                        } else {
+                            tokens.add(new Token(Token.tokenType.NUMBER, accumulator.toString(), lineCounter));
+                            accumulator = new String();
+                            machine.setStart();
+                            i++;
+                        }
+                        break;
+                    case "COMMENT":
+                        inComment = true;
+                        if (input.get(i) != '}') {
+                            i++;
+                        } else {
+                            accumulator = new String();
+                            machine.setStart();
+                            i++;
+                            inComment = false;
+                        }
+                        break;
+                    case "PAREN":
+                        if (input.get(i) != ')') {
+                            accumulator += input.get(i);
+                            i++;
+                        } else {
+                            Lexer parenLex = new Lexer();
+                            parenLex.lex(accumulator);
+                            tokens.add(new Token(Token.tokenType.PARAN, parenLex.toString(), lineCounter));
+                            accumulator = new String();
+                            machine.setStart();
+                            i++;
+                        }
+                        break;
+                    case "BRACKET":
+                        if (input.get(i) != ']') {
+                            accumulator += input.get(i);
+                            i++;
+                        } else {
+                            tokens.add(new Token(Token.tokenType.BRACKET, accumulator, lineCounter));
+                            accumulator = new String();
+                            machine.setStart();
+                            i++;
+                        }
+                        break;
+                    case "STRINGLITERAL":
+                        if (input.get(i) != '"') {
+                            accumulator += input.get(i);
+                            i++;
+                        } else {
+                            tokens.add(new Token(Token.tokenType.STRING, accumulator, lineCounter));
+                            accumulator = new String();
+                            machine.setStart();
+                            i++;
+                        }
+                        break;
                 }
             }
             //checks if accumulator is empty before moving onto the next line in the shank file
             //if accumulator contains a string, it creates a new token for whatever is left in the accumulator
-            if(!accumulator.isEmpty()){
-                if(machine.getState() == "WORD"){
-                    tokens.add(new Token(Token.tokenType.WORD, accumulator));
-                    accumulator = new String();
+            if (!accumulator.isEmpty()) {
+                if (machine.getState() == "WORD") {
+                    if (knownWords.get(accumulator) != null) {
+                        tokens.add(new Token(knownWords.get(accumulator), lineCounter));
+                        accumulator = new String();
+                    } else {
+                        tokens.add(new Token(Token.tokenType.IDENTIFIER, accumulator.toString(), lineCounter));
+                        accumulator = new String();
+                    }
                 }
-                else{
-                    tokens.add(new Token(Token.tokenType.NUMBER, accumulator));
+                else if(machine.getState() == "STRINGLITERAL" || machine.getState() == "CHARLITERAL"){
+                    throw new SyntaxErrorException("unterminated " + machine.getState() + " detected on line " + lineCounter);
+                }
+                else {
+                    tokens.add(new Token(Token.tokenType.NUMBER, accumulator, lineCounter));
                     accumulator = new String();
                 }
             }
-            tokens.add(new Token(Token.tokenType.ENDOFLINE));
+            if(!tokens.isEmpty()) {
+                tokens.add(new Token(Token.tokenType.ENDOFLINE, lineCounter));
+            }
+            lineCounter++;
+        }
     }
 
     /**
      * method referenced in main that is used to print all the tokens contained in the tokens list
      */
-    public static void tokenPrint(){
-        for(int i = 0; i < tokens.size(); i++){
+    public void tokenPrint() {
+        for (int i = 0; i < tokens.size(); i++) {
             System.out.println(tokens.get(i).toString());
         }
     }
+
+    /**
+     * toString method for lexer class
+     *
+     * @return a string represinting all the tokens on the line
+     */
+    public String toString() {
+        String s = new String();
+        for (int i = 0; i < tokens.size() - 1; i++) {
+            s += tokens.get(i) + " ";
+        }
+        return s;
+    }
+
 
 }

@@ -1,9 +1,11 @@
+
+
 /**
  * ICSI 311
- * Assignment 1
+ * Assignment 2
  * Ryan McSweeney
  * RM483514
- * 2/3/23
+ * 2/12/23
  */
 
 public class State {
@@ -16,7 +18,7 @@ public class State {
      * enum for the type of state
      */
     public enum stateType{
-        WORD, NUMBER, PERIOD, START
+        WORD, NUMBER, PERIOD, START, OPERATOR, STRINGLITERAL, CHARLITERAL, COMMENT, BRACKET, PAREN
     }
 
     /**
@@ -54,23 +56,35 @@ public class State {
         this.current = stateType.PERIOD;
     }
 
+    public void setOperator(){
+        this.current = stateType.OPERATOR;
+    }
+
+    public void setStringLiteral(){
+        this.current = stateType.STRINGLITERAL;
+    }
+
+    public void setCharLiteral(){
+        this.current = stateType.CHARLITERAL;
+    }
+
+    public void setComment(){
+        this.current = stateType.COMMENT;
+    }
+
+    public void setBracket(){
+        this.current = stateType.BRACKET;
+    }
+
+    public void setParan(){
+        this.current = stateType.PAREN;
+    }
     /**
      * getter method for the current state
      * @return a String containing the current state
      */
     public String getState(){
-        if(this.current == stateType.START){
-            return "START";
-        }
-        else if(this.current == stateType.WORD){
-            return "WORD";
-        }
-        else if(this.current == stateType.NUMBER){
-            return "NUMBER";
-        }
-        else{
-            return "PERIOD";
-        }
+        return this.current.toString();
 
     }
 }
