@@ -80,20 +80,20 @@ public class Lexer {
             //accumaluted word
             String accumulator = new String();
 
-
+//checks if lexer is still inside a possible multiline comment
+            if (inComment) {
+                machine.setComment();
+            }
+            int currentIndent = getIndent(line);
+            for(int k = 0; k < currentIndent - previousIndent; k++){
+                tokens.add(new Token(Token.tokenType.INDENT, lineCounter));
+            }
+            for(int k = 0; k < previousIndent - currentIndent; k++){
+                tokens.add(new Token(Token.tokenType.DEDENT, lineCounter));
+            }
+            previousIndent = currentIndent;
             while (i < input.size()) {
-                //checks if lexer is still inside a possible multiline comment
-                if (inComment) {
-                    machine.setComment();
-                }
-                int currentIndent = getIndent(line);
-                for(int k = 0; k < currentIndent - previousIndent; k++){
-                    tokens.add(new Token(Token.tokenType.INDENT, lineCounter));
-                }
-                for(int k = 0; k < previousIndent - currentIndent; k++){
-                    tokens.add(new Token(Token.tokenType.DEDENT, lineCounter));
-                }
-                previousIndent = currentIndent;
+
                 switch (machine.getState()) {
                     //Start state of state machine
                     case "START":
