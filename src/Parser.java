@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 4
+ * Assignment 6
  * Ryan McSweeney
  * RM483514
- * 3/5/23
+ * 3/26/23
  */
 
 import java.util.LinkedList;
@@ -19,9 +19,7 @@ public class Parser {
      * @param tokens list of tokens received from the lexer
      */
     public Parser(LinkedList<Token> tokens) {
-        for (int i = 0; i < tokens.size(); i++) {
-            parserTokens.add(tokens.get(i));
-        }
+        parserTokens.addAll(tokens);
     }
 
     /**
@@ -44,7 +42,7 @@ public class Parser {
     private void expectEndOfLine() {
         Token tok = matchAndRemove(Token.tokenType.ENDOFLINE);
         if (tok == null) {
-            throw new SyntaxErrorException("NO END OF LINE FOUND");
+            throw new SyntaxErrorException("NO END OF LINE FOUND AT LINE " + tok.getTokenLine());
         }
     }
 
@@ -238,7 +236,11 @@ public class Parser {
                         return new RealNode(Float.parseFloat(factor.getTokenContents()));
                     }
                 }
-            } else {
+            }
+//            else if(factor == null && isNegative){
+//                throw new SyntaxErrorException("negative sign appended to a non number at line " + peek(0).getTokenLine());
+//            }
+            else {
                 factor = matchAndRemove(Token.tokenType.IDENTIFIER);
             }
 
@@ -715,6 +717,8 @@ public class Parser {
         //in case of array 2 index values are declared
         int from = -1;
         int to = -1;
+        float realFrom = -1;
+        float realtTo = -1;
 
         //identifier is expected after variables keyword
         Token token = matchAndRemove(Token.tokenType.IDENTIFIER);
@@ -740,6 +744,32 @@ public class Parser {
                 //code below determines the varible type and loops to add new varible nodes to the list
                 token = matchAndRemove(Token.tokenType.INTEGER);
                 if (token != null) {
+                    if(peek(0).getTokenType() == Token.tokenType.FROM) {
+                        //remove from
+                        matchAndRemove(Token.tokenType.FROM);
+                        //remove the number and make sure it returns properly, if not throw an exception
+                        token = matchAndRemove(Token.tokenType.NUMBER);
+                        if(token == null){
+                            throw new SyntaxErrorException("no number found after from type limit declaration on line: " + peek(0).getTokenLine());
+                        }
+                        //parse the int from the token
+                        from = Integer.parseInt(token.getTokenContents());
+                        //remove to
+                        if(matchAndRemove(Token.tokenType.TO) == null){
+                            throw new SyntaxErrorException("no to keyword found in type limit declaration on line: " + peek(0).getTokenLine());
+                        }
+                        //remove the number
+                        token = matchAndRemove(Token.tokenType.NUMBER);
+                        if(token == null){
+                            throw new SyntaxErrorException("no number found after to in type limit declaration on line: " + peek(0).getTokenLine());
+                        }
+                        //parse the int from the token
+                        to = Integer.parseInt(token.getTokenContents());
+                        //loop through the list and add new variables
+                        while(!variableNames.isEmpty()){
+                            variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.INTEGER, from, to, true, false));
+                        }
+                    }
                     while (!variableNames.isEmpty()) {
                         variablesList.add(new VariableNode(
                                 variableNames.remove(),
@@ -751,6 +781,25 @@ public class Parser {
                 }
 
                 if (token != null && !variableNames.isEmpty()) {
+                    if(peek(0).getTokenType() == Token.tokenType.FROM){
+                        matchAndRemove(Token.tokenType.FROM);
+                        token = matchAndRemove(Token.tokenType.NUMBER);
+                        if(token == null){
+                            throw new SyntaxErrorException("number expected after from in type limit declaration at line: " + peek(0).getTokenLine());
+                        }
+                        realFrom = Float.parseFloat(token.getTokenContents());
+                        if(matchAndRemove(Token.tokenType.TO) == null){
+                            throw new SyntaxErrorException("no to keyword found int type limits declaration at line: " + peek(0).getTokenLine());
+                        }
+                        token = matchAndRemove(Token.tokenType.NUMBER);
+                        if(token == null){
+                            throw new SyntaxErrorException("number expected after to in type limit declaration at line: " + peek(0).getTokenLine());
+                        }
+                        realtTo = Float.parseFloat(token.getTokenContents());
+                        while(!variableNames.isEmpty()){
+                            variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.REAL, realFrom, realtTo, true));
+                        }
+                    }
                     while (!variableNames.isEmpty()) {
                         variablesList.add(new VariableNode(
                                 variableNames.remove(),
@@ -783,6 +832,26 @@ public class Parser {
                 }
 
                 if (token != null && !variableNames.isEmpty()) {
+                    if(peek(0).getTokenType() == Token.tokenType.FROM){
+                        //TODO: ADD HERE FOR TYPE LIMITS
+                        matchAndRemove(Token.tokenType.FROM);
+                        token = matchAndRemove(Token.tokenType.NUMBER);
+                        if(token == null){
+                            throw new SyntaxErrorException("number expected after from in type limit declaration at line: " + peek(0).getTokenLine());
+                        }
+                        from = Integer.parseInt(token.getTokenContents());
+                        if(matchAndRemove(Token.tokenType.TO) == null){
+                            throw new SyntaxErrorException("no to keyword found int type limits declaration at line: " + peek(0).getTokenLine());
+                        }
+                        token = matchAndRemove(Token.tokenType.NUMBER);
+                        if(token == null){
+                            throw new SyntaxErrorException("number expected after to in type limit declaration at line: " + peek(0).getTokenLine());
+                        }
+                        to = Integer.parseInt(token.getTokenContents());
+                        while(!variableNames.isEmpty()){
+                            variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.STRING, from, to, true, false));
+                        }
+                    }
                     while (!variableNames.isEmpty()) {
                         variablesList.add(new VariableNode(variableNames.remove(),
                                 VariableNode.VariableType.STRING,
@@ -824,23 +893,23 @@ public class Parser {
                         switch (peek(0).getTokenType()) {
                             case INTEGER:
                                 token = matchAndRemove(Token.tokenType.INTEGER);
-                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.INTEGER, from, to, true));
+                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.INTEGER, from, to, true, true));
                                 break;
                             case REAL:
                                 token = matchAndRemove(Token.tokenType.REAL);
-                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.REAL, from, to, true));
+                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.REAL, from, to, true, true));
                                 break;
                             case BOOLEAN:
                                 token = matchAndRemove(Token.tokenType.BOOLEAN);
-                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.BOOLEAN, from, to, true));
+                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.BOOLEAN, from, to, true, true));
                                 break;
                             case CHARACTERLITERAL:
                                 token = matchAndRemove(Token.tokenType.CHARACTERLITERAL);
-                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.CHARACTER, from, to, true));
+                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.CHARACTER, from, to, true, true));
                                 break;
                             case STRINGLITERAL:
                                 token = matchAndRemove(Token.tokenType.STRINGLITERAL);
-                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.STRING, from, to, true));
+                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.STRING, from, to, true, true));
                                 break;
 
                         }
@@ -859,14 +928,21 @@ public class Parser {
         return variablesList;
     }
 
+    /**
+     * method used to parse incoming statements
+     * @return a list of statements contained within the function, decision structure or loop
+     */
     private LinkedList<StatementNode> statements() {
         matchAndRemove(Token.tokenType.INDENT);
         LinkedList<StatementNode> statementList = new LinkedList<StatementNode>();
+        //only operates if there are still tokens remaining
         if (!parserTokens.isEmpty()) {
+            //parses first statement
             StatementNode root = statement();
             if (root != null) {
                 statementList.add(root);
             }
+            //loops looking for more statements, loop breaks when a statement node comes back null
             while (root != null) {
                 if (!parserTokens.isEmpty()) {
                     root = statement();
@@ -878,41 +954,241 @@ public class Parser {
                 }
             }
         }
+        //expects dedent if there are still more tokens
         if (!parserTokens.isEmpty()) {
             matchAndRemove(Token.tokenType.DEDENT);
         }
+        //returns the complete list of statements
         return statementList;
     }
 
-    private StatementNode statement() {
+    /**
+     * method called by statements() determines the statement type
+     * @return a statement node containing the statement
+     */
+    private StatementNode statement() { //TODO: EDIT HERE TO HANDLE DIFFERENT STATEMENT TYPES
         if (peek(0).getTokenType() == Token.tokenType.IDENTIFIER) {
-            if (peek(1).getTokenType() == Token.tokenType.LPAREN) {
+            if (peek(1).getTokenType() != Token.tokenType.ASSIGNMENT) {
                 //determines if incoming statement is a function call
-                return null;
+                return parseFunctionCall();
             }
-            //if statement is not a function call, assignment is called
-            AssignmentNode assignStatement = assignment();
-            expectEndOfLine();
-            return assignStatement;
+            //if the statement is not a function call, parseAssignment() is called
+            return parseAssignment();
+        } //IF STATEMENTS
+        else if(peek(0).getTokenType() == Token.tokenType.IF){
+            return parseIf();
+        } //WHILE LOOPS
+        else if(peek(0).getTokenType() == Token.tokenType.WHILE){
+            return parseWhile();
+        } //REPEAT LOOPS
+        else if(peek(0).getTokenType() == Token.tokenType.REPEAT){
+            return parseRepeat();
+        } //FOR LOOPS
+        else if(peek(0).getTokenType() == Token.tokenType.FOR){
+            return parseFor();
         }
         return null;
     }
 
-    private AssignmentNode assignment() {
+    /**
+     * method that parses assignment statements
+     * @return a new assignment node containing the target reference node and the expression being assigned
+     */
+    private AssignmentNode parseAssignment() {
         VariableReferenceNode target = (VariableReferenceNode) factor();
         Token tok = matchAndRemove(Token.tokenType.ASSIGNMENT);
         Node rightSide;
-        AssignmentNode node;
+        //checks if assignment operator is present
         if (tok != null) {
+            //calls bool compare for right side
             rightSide = boolCompare();
+            expectEndOfLine();
+            //if there is a valid expression on the right side, new assignment node is returned
             if (rightSide != null) {
-                node = new AssignmentNode(target, rightSide);
+                return new AssignmentNode(target, rightSide);
             } else {
                 throw new SyntaxErrorException("assignment on line " + peek(0).getTokenLine() + " is not a valid expression");
             }
         } else {
             throw new SyntaxErrorException("no assignment symbol found at line " + peek(0).getTokenLine());
         }
-        return node;
+    }
+
+    /**
+     * parser method that parses if statements
+     * @return an ifNode containing the if statement and its sub statements
+     */
+    private IfNode parseIf(){
+        BooleanCompareNode ifCondition;
+        LinkedList<StatementNode> statements;
+        //ensures that incoming token is either an if or elsif
+        if(peek(0).getTokenType() == Token.tokenType.IF || peek(0).getTokenType() == Token.tokenType.ELSIF) {
+            //match and removes if or elsif
+            if(matchAndRemove(Token.tokenType.IF) == null){
+                matchAndRemove(Token.tokenType.ELSIF);
+            }
+            //uses boolCompare() to parse boolean expression
+            ifCondition = (BooleanCompareNode) boolCompare();
+            if(ifCondition == null){
+                throw new SyntaxErrorException("no boolean expression found in if statement at line " + peek(0).getTokenLine());
+            }
+            //expects then keyword if not found exception is thrown
+            if (matchAndRemove(Token.tokenType.THEN) != null) {
+                expectEndOfLine();
+                //uses statements() to parse the statements inside the if body
+                statements = statements();
+            } else {
+                throw new SyntaxErrorException("no 'then' after if expression at line " + peek(0).getTokenLine());
+            }
+            if(!parserTokens.isEmpty()) {
+                //if there are more links in the if statement chain, an ifNode is returned calling parseIf() recursively
+                //sets the else node to the recursively returned ifNode
+                if (peek(0).getTokenType() == Token.tokenType.ELSIF ||
+                        peek(0).getTokenType() == Token.tokenType.ELSE) {
+                    return new IfNode(ifCondition, statements, parseIf());
+                }
+            }
+            //if no elsifs or elses are found in the chain, an ifNode with no else extension is returned
+            return new IfNode(ifCondition, statements);
+        }//if incoming token is not if or elsif, it must be an else
+        else{
+            matchAndRemove(Token.tokenType.ELSE);
+            expectEndOfLine();
+            //statements() is called for statements inside else body
+            statements = statements();
+            //else node is returned to line 976
+            return new IfNode(statements);
+        }
+    }
+
+    /**
+     * parser method that parses while loops
+     * @return a WhileNode containing the while loop and its sub statements
+     */
+    private WhileNode parseWhile(){
+        BooleanCompareNode whileCondition;
+        LinkedList<StatementNode> statements;
+        //removes while token
+        matchAndRemove(Token.tokenType.WHILE);
+        //expects boolean expression, exception is thrown if it is not found
+        whileCondition = (BooleanCompareNode) boolCompare();
+        if(whileCondition == null){
+            throw new SyntaxErrorException("no boolean expression found in while loop at line " + peek(0).getTokenLine());
+        }
+        expectEndOfLine();
+        //calls statements() for while loop sub statements
+        statements = statements();
+        //whileNode is returned
+        return new WhileNode(whileCondition, statements);
+    }
+
+    /**
+     * parser method that parses repeat loops
+     * @return a RepeatNode containing the repeat loop and its sub statements
+     */
+    private RepeatNode parseRepeat(){
+        BooleanCompareNode repeatCondition;
+        LinkedList<StatementNode> statements;
+        //removes repeat token
+        matchAndRemove(Token.tokenType.REPEAT);
+        //expects until token, exception is thrown if it is not found
+        if(matchAndRemove(Token.tokenType.UNTIL) != null){
+            //boolCompare() is called to parse repeat loops boolean expression
+            repeatCondition = (BooleanCompareNode) boolCompare();
+            if(repeatCondition == null){
+                throw new SyntaxErrorException("no boolean expression found in repeat loop at line " + peek(0).getTokenLine());
+            }
+            expectEndOfLine();
+            //statements() is called on the statements inside of the repeat loop
+            statements = statements();
+            //repeat node is returned
+            return new RepeatNode(repeatCondition, statements);
+        }
+        else{
+            throw new SyntaxErrorException("no 'until' found after repeat keyword at line " + peek(0).getTokenLine());
+        }
+
+    }
+
+    /**
+     * parser method that parses for loops
+     * @return a ForNode containing the for loop, its variable, its from and to indexes and its sub statements
+     */
+    private ForNode parseFor(){
+        //removes for token
+        matchAndRemove(Token.tokenType.FOR);
+        String forVar;
+        Node from;
+        Node to;
+        //ensures an identifier is present(for loop variable) if not, expcetion is thrown
+        if(peek(0).getTokenType() == Token.tokenType.IDENTIFIER) {
+            forVar = matchAndRemove(Token.tokenType.IDENTIFIER).getTokenContents();
+        }
+        else{
+            throw new SyntaxErrorException("no variable found in for loop at line " + peek(0).getTokenLine());
+        }//removes from keyword, if not found, exception is thrown
+        if(matchAndRemove(Token.tokenType.FROM) != null){
+            //expression is called to parse 'from' expression
+            from = expression();
+            //removes to keyword, if not found, exception is thrown
+            if(matchAndRemove(Token.tokenType.TO) != null){
+                //expression is called to parse 'to' expression
+                to = expression();
+            }
+            else{
+                throw new SyntaxErrorException("no 'to' keyword found in for loop at line " + peek(0).getTokenLine());
+            }
+        }
+        else{
+            throw new SyntaxErrorException("no 'from keyword found in for loop at line " + peek(0).getTokenLine());
+        }
+        expectEndOfLine();
+        //ForNode is returned
+        return new ForNode(forVar, from, to, statements());
+    }
+
+    /**
+     * parser method that parses function calls
+     * @return a FunctionCallNode containing information about the function call including its name and paramters
+     */
+    private FunctionCallNode parseFunctionCall(){
+        //fetches the functions name and stores inside a string
+        String funcname = matchAndRemove(Token.tokenType.IDENTIFIER).getTokenContents();
+        LinkedList<ParameterNode> functionCallParams = new LinkedList<>();
+        Node param;
+        //while we are not at the end of the line, the function will search for parameters
+        while(peek(0).getTokenType() != Token.tokenType.ENDOFLINE){
+            //if the incoming parameter is a var
+            if(peek(0).getTokenType() == Token.tokenType.VAR){
+                //remove var token
+                matchAndRemove(Token.tokenType.VAR);
+                //make sure whats next is an identifier as that is the only valid token after var keyword
+                if(peek(0).getTokenType() != Token.tokenType.IDENTIFIER){
+                    throw new SyntaxErrorException("Identifier expected after var keyword in function call at line " + peek(0).getTokenLine());
+                }
+                //call factor to get a VariableReferenceNode returned
+                param = factor();
+                //add current parameter to the parameters list
+                functionCallParams.add(new ParameterNode(param));
+            }
+            //else it's just a normal shank expression
+            else{
+                //call expression on the param
+                param = expression();
+                if(param == null){
+                    throw new SyntaxErrorException("no valid expression found in function call parameters at line " + peek(0).getTokenLine());
+                }
+                //add it to the list
+                functionCallParams.add(new ParameterNode(param));
+            }
+            //makes sure comma is in between all parameters
+            if(matchAndRemove(Token.tokenType.COMMA) == null && peek(0).getTokenType() != Token.tokenType.ENDOFLINE){
+                throw new SyntaxErrorException("no comma found in between parameters at function call at line " + peek(0).getTokenLine());
+            }
+        }
+        //consume end of line
+        expectEndOfLine();
+        //return new FunctionCallNode
+        return new FunctionCallNode(funcname, functionCallParams);
     }
 }

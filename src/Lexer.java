@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 4
+ * Assignment 6
  * Ryan McSweeney
  * RM483514
- * 3/5/23
+ * 3/26/23
  */
 
 import java.util.HashMap;
@@ -67,6 +67,8 @@ public class Lexer {
             knownWords.put("of", Token.tokenType.OF);
             knownWords.put("true", Token.tokenType.TRUE);
             knownWords.put("false", Token.tokenType.FALSE);
+            knownWords.put("until", Token.tokenType.UNTIL);
+            knownWords.put("repeat", Token.tokenType.REPEAT);
 
             State machine = new State();
             int i = 0;
@@ -80,7 +82,7 @@ public class Lexer {
             //accumaluted word
             String accumulator = new String();
 
-//checks if lexer is still inside a possible multiline comment
+            //checks if lexer is still inside a possible multiline comment
             if (inComment) {
                 machine.setComment();
             }
@@ -93,7 +95,6 @@ public class Lexer {
             }
             previousIndent = currentIndent;
             while (i < input.size()) {
-
                 switch (machine.getState()) {
                     //Start state of state machine
                     case "START":

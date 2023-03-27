@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 4
+ * Assignment 6
  * Ryan McSweeney
  * RM483514
- * 3/5/23
+ * 3/26/23
  */
 
 import java.util.LinkedList;
@@ -102,9 +102,11 @@ public class FunctionNode extends Node{
         }
 
         s += "\nSTATEMENTS: ------------------------------------------------------------";
+        s += "\n";
 
         for(int i = 0; i < this.statements.size(); i++){
             s += "\n" + this.statements.get(i);
+            s += "\n";
         }
         return s;
 

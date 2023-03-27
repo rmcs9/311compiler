@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 4
+ * Assignment 6
  * Ryan McSweeney
  * RM483514
- * 3/5/23
+ * 3/26/23
  */
 
 public class VariableNode extends Node{
@@ -18,6 +18,12 @@ public class VariableNode extends Node{
 
     private int from = 0;
     private int to = 0;
+
+    private float realFrom = 0;
+
+    private float realTo = 0;
+
+    boolean isArray = false;
 
     public enum VariableType{
         STRING, CHARACTER, INTEGER, REAL, BOOLEAN, ARRAY
@@ -50,12 +56,22 @@ public class VariableNode extends Node{
     }
 
     /**
-     * variable node construtor for an array
-      * @param n name of the array
-     * @param ty type of the array
-     * @param f starting index of the array
-     * @param t ending index of the array
+     * variable node construtor for an array or variable of type Integer, String with type limits
+      * @param n name of the array or variable
+     * @param ty type of the array or variable
+     * @param f starting index of the array or lower bound of the type limit
+     * @param t ending index of the array or upper bound of the type limit
+     * @param isArr boolean, true if variable is an array, false if otherwise
      */
+    public VariableNode(String n, VariableType ty, int f, int t, boolean ch, boolean isArr) {
+        this.variableName = n;
+        this.type = ty;
+        this.from = f;
+        this.to = t;
+        this.changeable = ch;
+        this.isArray = isArr;
+    }
+
     public VariableNode(String n, VariableType ty, int f, int t, boolean ch) {
         this.variableName = n;
         this.type = ty;
@@ -65,15 +81,52 @@ public class VariableNode extends Node{
     }
 
     /**
+     * variable node contructor for a real variable with type limits
+     * @param n name of the variable
+     * @param ty type of the variable (will always be real)
+     * @param f lower bound of the type limit
+     * @param t upper bound of the type limit
+     * @param ch whether or not the variable is changeable or not
+     */
+    public VariableNode(String n, VariableType ty, float f, float t, boolean ch){
+        this.variableName = n;
+        this.type = ty;
+        this.realFrom = f;
+        this.realTo = t;
+        this.changeable = ch;
+    }
+
+    /**
      * to string method for a variable node
      * @return a string that lists the properties of the variable
      */
     public String toString() {
-        if(this.to != 0){
-            return this.variableName + " = array of " + this.type + " changeable = " + this.changeable + " from " + this.from + " to " + this.to;
+        if(this.type != VariableType.REAL){
+            if(this.isArray){
+                return this.variableName + " = array of " + this.type + " changeable = " + this.changeable + " from " + this.from + " to " + this.to;
+            }
+            else{
+                if(this.to != 0){
+                    return this.variableName + " = type: " + this.type + " value = " + this.value + " changeable = " + this.changeable + " type limit from " + this.from + " to " + this.to;
+                }
+                else{
+                    return this.variableName + " = type: " + this.type + " value = " + this.value + " changeable = " + this.changeable;
+                }
+            }
         }
         else{
-            return this.variableName + " = type: " + this.type + " value = " + this.value + " changeable = " + this.changeable;
+            if(this.isArray){
+                return this.variableName + " = array of " + this.type + " changeable = " + this.changeable + " from " + this.from + " to " + this.to;
+            }
+            else{
+                if(this.realTo != 0){
+                    return this.variableName + " = type: " + this.type + " value = " + this.value + " changeable = " + this.changeable + " type limit from " + this.realFrom + " to " + this.realTo;
+                }
+                else{
+                    return this.variableName + " = type: " + this.type + " value = " + this.value + " changeable = " + this.changeable;
+                }
+
+            }
         }
     }
 }
