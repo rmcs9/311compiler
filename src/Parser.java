@@ -23,7 +23,7 @@ public class Parser {
     }
 
     /**
-     * match an remove method used to assist the parser in parsing tokens
+     * match and remove method used to assist the parser in parsing tokens
      *
      * @param tokenType type of token being checked for a match
      * @return the token at the top of the queue
@@ -833,7 +833,6 @@ public class Parser {
 
                 if (token != null && !variableNames.isEmpty()) {
                     if(peek(0).getTokenType() == Token.tokenType.FROM){
-                        //TODO: ADD HERE FOR TYPE LIMITS
                         matchAndRemove(Token.tokenType.FROM);
                         token = matchAndRemove(Token.tokenType.NUMBER);
                         if(token == null){
@@ -966,7 +965,7 @@ public class Parser {
      * method called by statements() determines the statement type
      * @return a statement node containing the statement
      */
-    private StatementNode statement() { //TODO: EDIT HERE TO HANDLE DIFFERENT STATEMENT TYPES
+    private StatementNode statement() {
         if (peek(0).getTokenType() == Token.tokenType.IDENTIFIER) {
             if (peek(1).getTokenType() != Token.tokenType.ASSIGNMENT) {
                 //determines if incoming statement is a function call
