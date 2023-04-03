@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 4
+ * Assignment 7
  * Ryan McSweeney
  * RM483514
- * 3/5/23
+ * 4/2/23
  */
 
 import java.util.Collection;
@@ -34,7 +34,6 @@ public class ProgramNode extends Node{
     public void addFunction(FunctionNode func){
         functionNames.add(func.getFunctionName());
         functions.put(func.getFunctionName(), func);
-
     }
 
     /**

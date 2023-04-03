@@ -44,6 +44,7 @@ public class FunctionNode extends Node{
         this.statements = statements;
     }
 
+
     /**
      * setter method for function name
      * @param s function name
@@ -82,6 +83,10 @@ public class FunctionNode extends Node{
      */
     public String getFunctionName(){
         return this.functionName;
+    }
+
+    public boolean isVariadic(){
+        return false;
     }
 
     /**

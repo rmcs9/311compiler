@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 6
+ * Assignment 7
  * Ryan McSweeney
  * RM483514
- * 3/26/23
+ * 4/2/23
  */
 
 public class VariableNode extends Node{
@@ -94,6 +94,18 @@ public class VariableNode extends Node{
         this.realFrom = f;
         this.realTo = t;
         this.changeable = ch;
+    }
+
+    public String getVariableName(){
+        return this.variableName;
+    }
+
+    public int getFrom(){
+        return this.from;
+    }
+
+    public int getTo(){
+        return to;
     }
 
     /**

@@ -1,12 +1,11 @@
 /**
  * ICSI 311
- * Assignment 6
+ * Assignment 7
  * Ryan McSweeney
  * RM483514
- * 3/26/23
+ * 4/2/23
  */
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -43,6 +42,22 @@ public class Shank {
         Parser parser = new Parser(lex.getTokens());
         System.out.println("Parse input successful");
         Node test = parser.parse();
+        // I/O functions
+        ((ProgramNode) test).addFunction(new BuiltInRead());
+        ((ProgramNode) test).addFunction(new BuiltInWrite());
+        //String functions
+        ((ProgramNode) test).addFunction(new BuiltInLeft());
+        ((ProgramNode) test).addFunction(new BuiltInRight());
+        ((ProgramNode) test).addFunction(new BuiltInSubstring());
+        //Number functions
+        ((ProgramNode) test).addFunction(new BuiltInSquareRoot());
+        ((ProgramNode) test).addFunction(new BuiltInGetRandom());
+        ((ProgramNode) test).addFunction(new BuiltInIntegerToReal());
+        ((ProgramNode) test).addFunction(new BuiltInRealToInteger());
+        //Array functions
+        ((ProgramNode) test).addFunction(new BuiltInStart());
+        ((ProgramNode) test).addFunction(new BuiltInEnd());
+
         System.out.printf(test.toString());
     }
 }
