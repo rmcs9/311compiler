@@ -44,6 +44,11 @@ public class Parser {
         if (tok == null) {
             throw new SyntaxErrorException("NO END OF LINE FOUND AT LINE " + tok.getTokenLine());
         }
+        if(!parserTokens.isEmpty()){
+            while(peek(0).getTokenType() == Token.tokenType.ENDOFLINE){
+                expectEndOfLine();
+            }
+        }
     }
 
     /**

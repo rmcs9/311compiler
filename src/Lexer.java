@@ -55,7 +55,6 @@ public class Lexer {
             knownWords.put("boolean", Token.tokenType.BOOLEAN);
             knownWords.put("character", Token.tokenType.CHARACTERLITERAL);
             knownWords.put("string", Token.tokenType.STRINGLITERAL);
-            knownWords.put("write", Token.tokenType.WRITE);
             knownWords.put("from", Token.tokenType.FROM);
             knownWords.put("to", Token.tokenType.TO);
             knownWords.put("var", Token.tokenType.VAR);
@@ -308,7 +307,8 @@ public class Lexer {
                     accumulator = new String();
                 }
             }
-            if(!tokens.isEmpty()) {
+            if(!tokens.isEmpty() && (tokens.peekLast().getTokenType() != Token.tokenType.DEDENT && tokens.peekLast().getTokenType() != Token.tokenType.INDENT)
+                    && tokens.peekLast().getTokenLine() == lineCounter) {
                 tokens.add(new Token(Token.tokenType.ENDOFLINE, lineCounter));
             }
             lineCounter++;

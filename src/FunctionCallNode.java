@@ -34,6 +34,7 @@ public class FunctionCallNode extends StatementNode{
      */
     public String toString(){
         String s = "FUNCTION CALL NODE:---------------------------\n";
+        s += "function: " + functionName+ "\n";
         s += "PARAMETERS:-----------------------------\n";
         for(int i = 0; i < parametersList.size(); i++){
             s += parametersList.get(i) + ", \n";
