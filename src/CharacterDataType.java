@@ -12,12 +12,23 @@ public class CharacterDataType extends InterpreterDataType{
      */
     private char value;
 
+    private boolean changeable = true;
+
     /**
      * constructor for a CharacterDataType
      * @param input char being passed in
      */
     public CharacterDataType(char input){
         this.value = input;
+    }
+
+    public CharacterDataType(char input, boolean chng){
+        value = input;
+        changeable = chng;
+    }
+
+    public boolean isChangeable(){
+        return changeable;
     }
 
     /**

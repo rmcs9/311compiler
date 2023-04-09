@@ -5,6 +5,7 @@
  * RM483514
  * 3/26/23
  */
+import java.time.temporal.ValueRange;
 import java.util.LinkedList;
 
 public class ForNode extends StatementNode{
@@ -19,11 +20,11 @@ public class ForNode extends StatementNode{
     /**
      * reference to the variable being used in the for loop
      */
-    VariableReferenceNode forVar;
+    private VariableReferenceNode forVar;
     /**
      * list of the for loops sub statements
      */
-    LinkedList<StatementNode> statementsList;
+    private LinkedList<StatementNode> statementsList;
 
     /**
      * contructor for a ForNode
@@ -37,6 +38,22 @@ public class ForNode extends StatementNode{
         this.from = fr;
         this.to = t;
         this.statementsList = list;
+    }
+
+    public Node getFrom(){
+        return from;
+    }
+
+    public Node getTo(){
+        return to;
+    }
+
+    public VariableReferenceNode getForVar(){
+        return forVar;
+    }
+
+    public LinkedList<StatementNode> getStatementsList(){
+        return statementsList;
     }
 
     /**

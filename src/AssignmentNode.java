@@ -1,12 +1,20 @@
 public class AssignmentNode extends StatementNode{
 
-    private VariableReferenceNode target;
+    private final VariableReferenceNode target;
 
-    private Node value;
+    private final Node value;
 
     public AssignmentNode(VariableReferenceNode tar, Node val){
         this.target = tar;
         this.value = val;
+    }
+
+    public VariableReferenceNode getTarget(){
+        return target;
+    }
+
+    public Node getValue(){
+        return value;
     }
 
 

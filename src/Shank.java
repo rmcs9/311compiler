@@ -59,5 +59,10 @@ public class Shank {
         ((ProgramNode) test).addFunction(new BuiltInEnd());
 
         System.out.printf(test.toString());
+
+        Interpreter interpreter = new Interpreter();
+        interpreter.interpretFunction(((ProgramNode) test).getFunction("testFunction"));
+
+        System.out.printf(test.toString());
     }
 }

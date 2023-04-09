@@ -8,10 +8,6 @@
 
 public class ArrayDataType extends InterpreterDataType{
     /**
-     * the name of the array variable
-     */
-    private String arrayName;
-    /**
      * the starting index of the array
      */
     private int startingIndex;
@@ -37,9 +33,14 @@ public class ArrayDataType extends InterpreterDataType{
      * @param var the variable node from the ADT tree
      */
     public ArrayDataType(VariableNode var){
-        arrayName = var.getVariableName();
         startingIndex = var.getFrom();
         endingIndex = var.getTo();
+    }
+
+    public ArrayDataType(InterpreterDataType[] arr, int from, int to){
+        array = arr;
+        startingIndex = from;
+        endingIndex = to;
     }
 
     /**
@@ -55,7 +56,7 @@ public class ArrayDataType extends InterpreterDataType{
      * @return the values contained in this array, concated together in one string seperated by a comma
      */
     public String toString(){
-        String s = new String();
+        String s = "";
         for(int i = 0; i < array.length; i++){
             s += array[i].toString() + ", ";
         }

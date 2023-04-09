@@ -25,6 +25,10 @@ public class BooleanNode extends Node {
         this.bool = b;
     }
 
+    public boolean getBool(){
+        return bool;
+    }
+
 
     /**
      * toString method for a Boolean Node

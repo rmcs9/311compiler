@@ -11,11 +11,11 @@ public class WhileNode extends StatementNode{
     /**
      * boolean condition of the while loop
      */
-    private BooleanCompareNode condition;
+    private final BooleanCompareNode condition;
     /**
      * list of sub statements in the while loop
      */
-    private LinkedList<StatementNode> statements;
+    private final LinkedList<StatementNode> statements;
 
     /**
      * constructor for a WhileNode
@@ -25,6 +25,14 @@ public class WhileNode extends StatementNode{
     public WhileNode(BooleanCompareNode cond, LinkedList<StatementNode> statementsList){
         this.condition = cond;
         this.statements = statementsList;
+    }
+
+    public BooleanCompareNode getCondition(){
+        return condition;
+    }
+
+    public LinkedList<StatementNode> getStatements(){
+        return statements;
     }
 
     /**

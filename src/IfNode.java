@@ -12,15 +12,15 @@ public class IfNode extends StatementNode{
     /**
      * boolean condition for the if statement
      */
-    private BooleanCompareNode condition;
+    private final BooleanCompareNode condition;
     /**
      * list of sub statements in the if statement
      */
-    private LinkedList<StatementNode> statements;
+    private final LinkedList<StatementNode> statements;
     /**
      * link to the elsif or else node, directly after the ifNode
      */
-    private IfNode elseNode;
+    private final IfNode elseNode;
 
     /**
      * ifNode constructor for a single if with no ifels or else components
@@ -53,6 +53,14 @@ public class IfNode extends StatementNode{
         this.condition = null;
         this.statements = statementList;
         this.elseNode = null;
+    }
+
+    public BooleanCompareNode getCondition(){
+        return condition;
+    }
+
+    public LinkedList<StatementNode> getStatements(){
+        return statements;
     }
 
     /**

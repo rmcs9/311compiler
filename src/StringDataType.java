@@ -9,8 +9,19 @@ public class StringDataType extends InterpreterDataType{
 
     private String value;
 
+    private boolean changeable = true;
+
     public StringDataType(String input){
         value = input;
+    }
+
+    public StringDataType(String input, boolean chng){
+        value = input;
+        changeable = chng;
+    }
+
+    public boolean isChangeable(){
+        return changeable;
     }
 
     public String toString(){

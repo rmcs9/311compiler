@@ -14,11 +14,11 @@ public class ProgramNode extends Node{
     /**
      * hash map for the program
      */
-    private HashMap<String, FunctionNode> functions;
+    private final HashMap<String, FunctionNode> functions;
     /**
      * linked list containing function names in the program
      */
-    private LinkedList<String> functionNames = new LinkedList<String>();
+    private final LinkedList<String> functionNames = new LinkedList<String>();
 
     /**
      * constructor for a new program node
@@ -34,6 +34,10 @@ public class ProgramNode extends Node{
     public void addFunction(FunctionNode func){
         functionNames.add(func.getFunctionName());
         functions.put(func.getFunctionName(), func);
+    }
+
+    public FunctionNode getFunction(String key){
+        return functions.get(key);
     }
 
     /**

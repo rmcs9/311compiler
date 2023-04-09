@@ -25,6 +25,10 @@ public class CharacterNode extends Node {
         this.chr = c;
     }
 
+    public char getCharacter(){
+        return chr;
+    }
+
 
     /**
      * toString method for the char node

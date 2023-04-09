@@ -11,11 +11,11 @@ public class RepeatNode extends StatementNode{
     /**
      * repeat nodes boolean condition
      */
-    private BooleanCompareNode condition;
+    private final BooleanCompareNode condition;
     /**
      * list of repeat nodes sub statements
      */
-    private LinkedList<StatementNode> statements;
+    private final LinkedList<StatementNode> statements;
 
     /**
      * constructor for RepeatNodes
@@ -25,6 +25,14 @@ public class RepeatNode extends StatementNode{
     public RepeatNode(BooleanCompareNode cond, LinkedList<StatementNode> statementsList){
         this.condition = cond;
         this.statements = statementsList;
+    }
+
+    public BooleanCompareNode getCondition(){
+        return condition;
+    }
+
+    public LinkedList<StatementNode> getStatements(){
+        return statements;
     }
 
     /**

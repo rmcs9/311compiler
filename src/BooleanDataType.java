@@ -11,12 +11,23 @@ public class BooleanDataType extends InterpreterDataType{
      */
     private boolean value;
 
+    private boolean changeable;
+
     /**
      * cinstructor for a BooleanDataTypes
      * @param input boolean value being inputted
      */
     public BooleanDataType(boolean input){
         this.value = input;
+    }
+
+    public BooleanDataType(boolean input, boolean chng){
+        value = input;
+        changeable = chng;
+    }
+
+    public boolean isChangeable(){
+        return changeable;
     }
 
     /**

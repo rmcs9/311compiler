@@ -15,7 +15,7 @@ public class Lexer {
     /**
      * linked list containing all lexed tokens
      */
-    private LinkedList<Token> tokens = new LinkedList<Token>();
+    private final LinkedList<Token> tokens = new LinkedList<Token>();
 
     /**
      * variable that tracks what line the lexer is on in the file
@@ -24,7 +24,7 @@ public class Lexer {
     /**
      * integer that tracks the number of spaces/indents on the previous line
      */
-    private int tabCounter = 0;
+    private final int tabCounter = 0;
     /**
      * determines whether the lexer is in the middle of a multi line comment
      */
@@ -79,7 +79,7 @@ public class Lexer {
             }
 
             //accumaluted word
-            String accumulator = new String();
+            String accumulator = "";
 
             //checks if lexer is still inside a possible multiline comment
             if (inComment) {
@@ -205,12 +205,12 @@ public class Lexer {
                         } else {
                             if (knownWords.get(accumulator) != null) {
                                 tokens.add(new Token(knownWords.get(accumulator), lineCounter));
-                                accumulator = new String();
+                                accumulator = "";
                                 machine.setStart();
 
                             } else {
-                                tokens.add(new Token(Token.tokenType.IDENTIFIER, accumulator.toString(), lineCounter));
-                                accumulator = new String();
+                                tokens.add(new Token(Token.tokenType.IDENTIFIER, accumulator, lineCounter));
+                                accumulator = "";
                                 machine.setStart();
 
                             }
@@ -226,8 +226,8 @@ public class Lexer {
                             accumulator += input.get(i);
                             i++;
                         } else {
-                            tokens.add(new Token(Token.tokenType.NUMBER, accumulator.toString(), lineCounter));
-                            accumulator = new String();
+                            tokens.add(new Token(Token.tokenType.NUMBER, accumulator, lineCounter));
+                            accumulator = "";
                             machine.setStart();
 
                         }
@@ -238,8 +238,8 @@ public class Lexer {
                             accumulator += input.get(i);
                             i++;
                         } else {
-                            tokens.add(new Token(Token.tokenType.NUMBER, accumulator.toString(), lineCounter));
-                            accumulator = new String();
+                            tokens.add(new Token(Token.tokenType.NUMBER, accumulator, lineCounter));
+                            accumulator = "";
                             machine.setStart();
                         }
                         break;
@@ -248,7 +248,7 @@ public class Lexer {
                         if (input.get(i) != '}') {
                             i++;
                         } else {
-                            accumulator = new String();
+                            accumulator = "";
                             machine.setStart();
                             i++;
                             inComment = false;
@@ -280,7 +280,7 @@ public class Lexer {
                             i++;
                         } else {
                             tokens.add(new Token(Token.tokenType.STRINGLITERAL, accumulator, lineCounter));
-                            accumulator = new String();
+                            accumulator = "";
                             machine.setStart();
                             i++;
                         }
@@ -293,10 +293,10 @@ public class Lexer {
                 if (machine.getState() == "WORD") {
                     if (knownWords.get(accumulator) != null) {
                         tokens.add(new Token(knownWords.get(accumulator), lineCounter));
-                        accumulator = new String();
+                        accumulator = "";
                     } else {
-                        tokens.add(new Token(Token.tokenType.IDENTIFIER, accumulator.toString(), lineCounter));
-                        accumulator = new String();
+                        tokens.add(new Token(Token.tokenType.IDENTIFIER, accumulator, lineCounter));
+                        accumulator = "";
                     }
                 }
                 else if(machine.getState() == "STRINGLITERAL" || machine.getState() == "CHARLITERAL"){
@@ -304,7 +304,7 @@ public class Lexer {
                 }
                 else {
                     tokens.add(new Token(Token.tokenType.NUMBER, accumulator, lineCounter));
-                    accumulator = new String();
+                    accumulator = "";
                 }
             }
             if(!tokens.isEmpty() && (tokens.peekLast().getTokenType() != Token.tokenType.DEDENT && tokens.peekLast().getTokenType() != Token.tokenType.INDENT)
@@ -333,7 +333,7 @@ public class Lexer {
      * @return a string represinting all the tokens on the line
      */
     public String toString() {
-        String s = new String();
+        String s = "";
         for (int i = 0; i < tokens.size() - 1; i++) {
             s += tokens.get(i) + " ";
         }

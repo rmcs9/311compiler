@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class Parser {
 
-    private LinkedList<Token> parserTokens = new LinkedList<Token>();
+    private final LinkedList<Token> parserTokens = new LinkedList<Token>();
 
     /**
      * constructor for a parser
@@ -972,7 +972,7 @@ public class Parser {
      */
     private StatementNode statement() {
         if (peek(0).getTokenType() == Token.tokenType.IDENTIFIER) {
-            if (peek(1).getTokenType() != Token.tokenType.ASSIGNMENT) {
+            if (peek(1).getTokenType() != Token.tokenType.ASSIGNMENT && peek(1).getTokenType() != Token.tokenType.LBRACKET) {
                 //determines if incoming statement is a function call
                 return parseFunctionCall();
             }

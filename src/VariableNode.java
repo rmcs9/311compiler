@@ -8,11 +8,11 @@
 
 public class VariableNode extends Node{
 
-    private String variableName;
+    private final String variableName;
 
-    private VariableType type;
+    private final VariableType type;
 
-    private boolean changeable;
+    private final boolean changeable;
 
     private Node value;
 
@@ -23,7 +23,7 @@ public class VariableNode extends Node{
 
     private float realTo = 0;
 
-    boolean isArray = false;
+    private boolean isArray = false;
 
     public enum VariableType{
         STRING, CHARACTER, INTEGER, REAL, BOOLEAN, ARRAY
@@ -106,6 +106,22 @@ public class VariableNode extends Node{
 
     public int getTo(){
         return to;
+    }
+
+    public VariableType getType(){
+        return this.type;
+    }
+
+    public Node getValue(){
+        return value;
+    }
+
+    public boolean isChangeable(){
+        return changeable;
+    }
+
+    public boolean isArray(){
+        return isArray;
     }
 
     /**

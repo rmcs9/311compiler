@@ -10,12 +10,23 @@ public class IntegerDataType extends InterpreterDataType{
 
     private int value;
 
+    private boolean changeable = true;
+
     /**
      * constructor for an integer data type
      * @param input integer being passed in
      */
     public IntegerDataType(int input){
         this.value = input;
+    }
+
+    public IntegerDataType(int input, boolean chng){
+        value = input;
+        changeable = chng;
+    }
+
+    public boolean isChangeable(){
+        return changeable;
     }
 
     /**

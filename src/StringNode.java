@@ -25,6 +25,10 @@ public class StringNode extends Node{
         this.str = s;
     }
 
+    public String getString(){
+        return str;
+    }
+
     /**
      * toString method for a string node
      * @return a string containing the string node and the string contained in the string node

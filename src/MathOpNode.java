@@ -8,12 +8,12 @@
 
 public class MathOpNode extends Node{
     //right node of the math op node
-    private Node rightNode;
+    private final Node rightNode;
     //left node of the math op node
-    private Node leftNode;
+    private final Node leftNode;
 
     //operator for the math op node
-    private operationType operator;
+    private final operationType operator;
 
     /**
      * constructor for a new math op node
@@ -25,6 +25,18 @@ public class MathOpNode extends Node{
         this.operator = type;
         this.rightNode = right;
         this.leftNode = left;
+    }
+
+    public Node getRightNode(){
+        return rightNode;
+    }
+
+    public Node getLeftNode(){
+        return leftNode;
+    }
+
+    public operationType getOperator(){
+        return operator;
     }
 
     /**

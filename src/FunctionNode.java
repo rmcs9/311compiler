@@ -6,6 +6,7 @@
  * 3/26/23
  */
 
+import javax.lang.model.element.VariableElement;
 import java.util.LinkedList;
 
 public class FunctionNode extends Node{
@@ -83,6 +84,14 @@ public class FunctionNode extends Node{
      */
     public String getFunctionName(){
         return this.functionName;
+    }
+
+    public LinkedList<VariableNode> getVariables(){
+        return variables;
+    }
+
+    public LinkedList<StatementNode> getStatements(){
+        return statements;
     }
 
     public boolean isVariadic(){

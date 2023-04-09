@@ -1,10 +1,10 @@
 public class BooleanCompareNode extends Node{
 
-    private Node rightNode;
+    private final Node rightNode;
 
-    private Node leftNode;
+    private final Node leftNode;
 
-    private compareType comparison;
+    private final compareType comparison;
 
     public enum compareType{
         EQUALS, NOTEQUALS, GREATERTHAN, LESSTHAN, GREATERTHANEQUALTO, LESSTHANEQUALTO
@@ -14,6 +14,18 @@ public class BooleanCompareNode extends Node{
         this.comparison = type;
         this.leftNode = left;
         this.rightNode = right;
+    }
+
+    public Node getLeft(){
+        return leftNode;
+    }
+
+    public Node getRight(){
+        return rightNode;
+    }
+
+    public compareType getComparison(){
+        return comparison;
     }
 
     public String toString(){

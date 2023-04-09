@@ -9,12 +9,23 @@ public class RealDataType extends InterpreterDataType{
 
     private float value;
 
+    private boolean changeable = true;
+
     /**
      * constructor for this object
      * @param input the float being passed in
      */
     public RealDataType(float input){
         this.value = input;
+    }
+
+    public RealDataType(float input, boolean chng){
+        value = input;
+        changeable = chng;
+    }
+
+    public boolean isChangeable(){
+        return changeable;
     }
 
     public String toString(){

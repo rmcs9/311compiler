@@ -1,6 +1,6 @@
 public class VariableReferenceNode extends Node{
 
-    private String name;
+    private final String name;
 
     private Node arrayIndexExpression;
 
@@ -11,6 +11,14 @@ public class VariableReferenceNode extends Node{
 
     public VariableReferenceNode(String name){
         this.name = name;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public Node getArrayIndexExpression(){
+        return arrayIndexExpression;
     }
 
 
