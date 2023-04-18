@@ -88,7 +88,7 @@ public class IfNode extends StatementNode{
         while(elsif != null){
             if(elsif.getElseNode() != null){
                 s += "ELSIF NODE-------------------------\n";
-                s += "elsif: " + this.condition + "\n";
+                s += "elsif: " + elsif.condition + "\n";
                 s += "STATEMENTS-----------------------\n";
                 for(int i = 0; i < elsif.statements.size(); i++){
                     s += elsif.statements.get(i) + "\n";
@@ -97,7 +97,7 @@ public class IfNode extends StatementNode{
             }
             else{
                 s += "ELSE NODE-------------------------\n";
-                s += "else: " + this.condition + "\n";
+                s += "else:\n";
                 s += "STATEMENTS-----------------------\n";
                 for(int i = 0; i < elsif.statements.size(); i++){
                     s += elsif.statements.get(i) + "\n";

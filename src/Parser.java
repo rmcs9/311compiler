@@ -84,37 +84,17 @@ public class Parser {
         Node ex1 = expression();
         Node ex2;
 
-        switch (peek(0).getTokenType()) {
-            case EQUALS:
-                matchAndRemove(Token.tokenType.EQUALS);
-                ex2 = expression();
-                ex1 = new BooleanCompareNode(BooleanCompareNode.compareType.EQUALS, ex1, ex2);
-                break;
-            case NOTEQUALS:
-                matchAndRemove(Token.tokenType.NOTEQUALS);
-                ex2 = expression();
-                ex1 = new BooleanCompareNode(BooleanCompareNode.compareType.NOTEQUALS, ex1, ex2);
-                break;
-            case GREATERTHAN:
-                matchAndRemove(Token.tokenType.GREATERTHAN);
-                ex2 = expression();
-                ex1 = new BooleanCompareNode(BooleanCompareNode.compareType.GREATERTHAN, ex1, ex2);
-                break;
-            case LESSTHAN:
-                matchAndRemove(Token.tokenType.LESSTHAN);
-                ex2 = expression();
-                ex1 = new BooleanCompareNode(BooleanCompareNode.compareType.LESSTHAN, ex1, ex2);
-                break;
-            case GREATERTHANEQUALTO:
-                matchAndRemove(Token.tokenType.GREATERTHANEQUALTO);
-                ex2 = expression();
-                ex1 = new BooleanCompareNode(BooleanCompareNode.compareType.GREATERTHANEQUALTO, ex1, ex2);
-                break;
-            case LESSTHANEQUALTO:
-                matchAndRemove(Token.tokenType.LESSTHANEQUALTO);
-                ex2 = expression();
-                ex1 = new BooleanCompareNode(BooleanCompareNode.compareType.LESSTHANEQUALTO, ex1, ex2);
-                break;
+        if(peek(0).getTokenType() == Token.tokenType.EQUALS ||
+                peek(0).getTokenType() == Token.tokenType.NOTEQUALS ||
+                peek(0).getTokenType() == Token.tokenType.GREATERTHAN ||
+                peek(0).getTokenType() == Token.tokenType.LESSTHAN ||
+                peek(0).getTokenType() == Token.tokenType.GREATERTHANEQUALTO ||
+                peek(0).getTokenType() == Token.tokenType.LESSTHANEQUALTO){
+
+            Token compareType = matchAndRemove(peek(0).getTokenType());
+
+            ex2 = expression();
+            ex1 = new BooleanCompareNode(BooleanCompareNode.findCompareType(compareType.getTokenType().toString()), ex1, ex2);
         }
         return ex1;
     }

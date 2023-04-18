@@ -28,6 +28,24 @@ public class BooleanCompareNode extends Node{
         return comparison;
     }
 
+    public static compareType findCompareType(String comp){
+        switch(comp){
+            case "EQUALS":
+                return compareType.EQUALS;
+            case "NOTEQUALS":
+                return compareType.NOTEQUALS;
+            case "GREATERTHAN":
+                return compareType.GREATERTHAN;
+            case "LESSTHAN":
+                return compareType.LESSTHAN;
+            case "GREATERTHANEQUALTO":
+                return compareType.GREATERTHANEQUALTO;
+            case "LESSTHANEQUALTO":
+                return compareType.LESSTHANEQUALTO;
+        }
+        throw new SyntaxErrorException("invalid comnpare type found in boolean comparison");
+    }
+
     public String toString(){
         return "BooleanCompareNode({" + this.leftNode + "}, " + this.comparison + ", {" + this.rightNode + "})";
     }
