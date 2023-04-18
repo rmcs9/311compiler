@@ -1,14 +1,14 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 
 import java.util.LinkedList;
 
-public class BuiltInSubstring extends FunctionNode{
+public class BuiltInSubstring extends BuiltIn{
     /**
      * getter method for the name of this method
      * @return "SubString" as a string
@@ -44,6 +44,9 @@ public class BuiltInSubstring extends FunctionNode{
         else{throw new InterpreterRuntimeException("first parameter of Substring must be of type String");}
     }
 
+    public boolean isVar(int paramNumber){
+        return paramNumber == 3;
+    }
     /**
      * toString method for substring function
      * @return a string containing information about the function including its parameters and what it does

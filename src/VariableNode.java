@@ -1,18 +1,18 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 
 public class VariableNode extends Node{
 
-    private final String variableName;
+    private String variableName;
 
-    private final VariableType type;
+    private VariableType type;
 
-    private final boolean changeable;
+    private  boolean changeable;
 
     private Node value;
 
@@ -24,6 +24,8 @@ public class VariableNode extends Node{
     private float realTo = 0;
 
     private boolean isArray = false;
+
+    private boolean isVar = false;
 
     public enum VariableType{
         STRING, CHARACTER, INTEGER, REAL, BOOLEAN, ARRAY
@@ -40,6 +42,20 @@ public class VariableNode extends Node{
         this.variableName = n;
         this.type = ty;
         this.changeable = ch;
+    }
+
+    /**
+     * variable node constructor for parameters in function definitions. Used exclusivly in parameterDeclartations() method in parser
+     * @param n name of the parameter
+     * @param ty type of the parameter
+     * @param ch if the parameter is changeable or not
+     * @param var whether it is marked as a var or not
+     */
+    public VariableNode(String n, VariableType ty, boolean ch, boolean var){
+        this.variableName = n;
+        this.type = ty;
+        this.changeable = ch;
+        isVar = var;
     }
 
     /**
@@ -71,6 +87,17 @@ public class VariableNode extends Node{
         this.changeable = ch;
         this.isArray = isArr;
     }
+
+    public VariableNode(String n, VariableType ty, int f, int t, boolean ch, boolean isArr, boolean isVar) {
+        this.variableName = n;
+        this.type = ty;
+        this.from = f;
+        this.to = t;
+        this.changeable = ch;
+        this.isArray = isArr;
+        this.isVar = isVar;
+    }
+
 
     public VariableNode(String n, VariableType ty, int f, int t, boolean ch) {
         this.variableName = n;
@@ -124,6 +151,10 @@ public class VariableNode extends Node{
         return isArray;
     }
 
+    public boolean isVar(){
+        return isVar;
+    }
+
     /**
      * to string method for a variable node
      * @return a string that lists the properties of the variable
@@ -131,27 +162,27 @@ public class VariableNode extends Node{
     public String toString() {
         if(this.type != VariableType.REAL){
             if(this.isArray){
-                return this.variableName + " = array of " + this.type + " changeable = " + this.changeable + " from " + this.from + " to " + this.to;
+                return this.variableName + " = array of " + this.type + " changeable = " + this.changeable + " from " + this.from + " to " + this.to + " isVar = " + isVar;
             }
             else{
                 if(this.to != 0){
                     return this.variableName + " = type: " + this.type + " value = " + this.value + " changeable = " + this.changeable + " type limit from " + this.from + " to " + this.to;
                 }
                 else{
-                    return this.variableName + " = type: " + this.type + " value = " + this.value + " changeable = " + this.changeable;
+                    return this.variableName + " = type: " + this.type + " value = " + this.value + " changeable = " + this.changeable + " isVar = " + isVar;
                 }
             }
         }
         else{
             if(this.isArray){
-                return this.variableName + " = array of " + this.type + " changeable = " + this.changeable + " from " + this.from + " to " + this.to;
+                return this.variableName + " = array of " + this.type + " changeable = " + this.changeable + " from " + this.from + " to " + this.to + " isVar = " + isVar;
             }
             else{
                 if(this.realTo != 0){
                     return this.variableName + " = type: " + this.type + " value = " + this.value + " changeable = " + this.changeable + " type limit from " + this.realFrom + " to " + this.realTo;
                 }
                 else{
-                    return this.variableName + " = type: " + this.type + " value = " + this.value + " changeable = " + this.changeable;
+                    return this.variableName + " = type: " + this.type + " value = " + this.value + " changeable = " + this.changeable + " isVar = " + isVar;
                 }
 
             }

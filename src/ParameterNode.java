@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 6
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 3/26/23
+ * 4/17/23
  */
 public class ParameterNode extends Node{
     /**
@@ -15,13 +15,16 @@ public class ParameterNode extends Node{
      */
     Node paramExpression;
 
+    boolean isVar;
+
     /**
      * contructor for a paramter node, where the parameter is a var
      * @param var the var parameter
      */
-    public ParameterNode(VariableReferenceNode var){
+    public ParameterNode(VariableReferenceNode var, boolean isVar){
         this.varIdentifier = var;
         this.paramExpression = null;
+        this.isVar = isVar;
     }
 
     /**
@@ -31,6 +34,7 @@ public class ParameterNode extends Node{
     public ParameterNode(Node ex){
         this.varIdentifier = null;
         this.paramExpression = ex;
+        this.isVar = false;
     }
 
     /**

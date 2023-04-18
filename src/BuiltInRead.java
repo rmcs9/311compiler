@@ -1,15 +1,15 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 import java.util.LinkedList;
 import java.util.Scanner;
 
 
-public class BuiltInRead extends FunctionNode{
+public class BuiltInRead extends BuiltIn{
     /**
      * getter method for the name of this function. used as a key for the programNode hashmap
      * @return "Read" as a string
@@ -38,6 +38,9 @@ public class BuiltInRead extends FunctionNode{
         }
     }
 
+    public boolean isVar(int paramNumber){
+        return true;
+    }
     /**
      * this method is variadic
      * @return true

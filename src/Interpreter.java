@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 8
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/9/23
+ * 4/17/23
  */
 
 import java.util.HashMap;
@@ -13,12 +13,18 @@ public class Interpreter {
 
     private HashMap<String, InterpreterDataType> localVars;
 
+    private ProgramNode currentProgram;
+
+    public Interpreter(ProgramNode program){
+        currentProgram = program;
+        localVars = new HashMap<>();
+    }
+
     /**
      * interpretFunction takes in a function node and adds all variables and constants declared in the function into the local vars hash map
      * @param func function node being passed in
      */
-    public void interpretFunction(FunctionNode func){
-        localVars = new HashMap<>();
+    public void interpretFunction(FunctionNode func, LinkedList<InterpreterDataType> params){
         for(int i = 0; i < func.getVariables().size(); i++){
             VariableNode currentVar = func.getVariables().get(i);
 
@@ -121,7 +127,62 @@ public class Interpreter {
                 }
             }
         }
-        this.InterpretBlock(func.statements);
+
+        for(int i = 0; i < func.getParameters().size(); i++){
+            switch(func.getParameters().get(i).getType()){
+                case INTEGER:
+                    if(params.get(i) instanceof IntegerDataType){
+                        localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
+                    }
+                    else{
+                        throw new InterpreterRuntimeException("incorrect type value passed in to param " +
+                                (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
+                                func.getParameters().get(i).getType());
+                    }
+                    break;
+                case REAL:
+                    if(params.get(i) instanceof RealDataType){
+                        localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
+                    }
+                    else{
+                        throw new InterpreterRuntimeException("incorrect type value passed in to param " +
+                                (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
+                                func.getParameters().get(i).getType());
+                    }
+                    break;
+                case STRING:
+                    if(params.get(i) instanceof StringDataType){
+                        localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
+                    }
+                    else{
+                        throw new InterpreterRuntimeException("incorrect type value passed in to param " +
+                                (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
+                                func.getParameters().get(i).getType());
+                    }
+                    break;
+                case CHARACTER:
+                    if(params.get(i) instanceof CharacterDataType){
+                        localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
+                    }
+                    else{
+                        throw new InterpreterRuntimeException("incorrect type value passed in to param " +
+                                (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
+                                func.getParameters().get(i).getType());
+                    }
+                    break;
+                case BOOLEAN:
+                    if(params.get(i) instanceof BooleanDataType){
+                        localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
+                    }
+                    else{
+                        throw new InterpreterRuntimeException("incorrect type value passed in to param " +
+                                (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
+                                func.getParameters().get(i).getType());
+                    }
+                    break;
+            }
+        }
+        this.InterpretBlock(func.getStatements());
     }
 
     /**
@@ -147,10 +208,9 @@ public class Interpreter {
             else if(currentStatement instanceof AssignmentNode){
                 InterpretAssignment((AssignmentNode) currentStatement);
             }
-//            NOT IN THIS ASSIGNMENT
-//            else if(currentStatement instanceof FunctionCallNode){
-//
-//            }
+            else if(currentStatement instanceof FunctionCallNode){
+                InterpretFunctionCall((FunctionCallNode) currentStatement);
+            }
         }
     }
 
@@ -282,10 +342,114 @@ public class Interpreter {
         }
     }
 
-//    NOT IN THIS ASSIGNMENT
-//    private void InterpretFunctionCall(FunctionCallNode node){
-//
-//    }
+    /**
+     * interprets a function call node. makes a copy of the parameters from the function call node, then passes those in to execute or interpret function.
+     * finally, the method checks to see if all invocations are marked as var before changing any values
+     * @param node function call node being passed in
+     */
+    private void InterpretFunctionCall(FunctionCallNode node){
+        if(currentProgram.getFunction(node.getFunctionName()) != null){
+
+            FunctionNode functionCalled = currentProgram.getFunction(node.getFunctionName());
+            LinkedList<ParameterNode> functionCallParamsList = node.getParametersList();
+
+            LinkedList<InterpreterDataType> params = new LinkedList<>();
+            for (ParameterNode parameterNode : functionCallParamsList) {
+                InterpreterDataType currentVar;
+                if(parameterNode.varIdentifier == null){
+                    currentVar = expression(parameterNode.paramExpression);
+                }
+                else{
+                    currentVar = expression(parameterNode.varIdentifier);
+                }
+
+                InterpreterDataType copyVar;
+                if(currentVar instanceof IntegerDataType){
+                    copyVar = new IntegerDataType((int) currentVar.getData());
+                }
+                else if(currentVar instanceof RealDataType){
+                    copyVar = new RealDataType((float) currentVar.getData());
+                }
+                else if(currentVar instanceof StringDataType){
+                    copyVar = new StringDataType(currentVar.toString());
+                }
+                else if(currentVar instanceof CharacterDataType){
+                    copyVar = new CharacterDataType((char) currentVar.getData());
+                }
+                else if(currentVar instanceof BooleanDataType){
+                    copyVar = new BooleanDataType((boolean) currentVar.getData());
+                }
+                else if(currentVar instanceof ArrayDataType){
+                    copyVar = new ArrayDataType(((ArrayDataType) currentVar).getArray());
+                }
+                else{
+                    throw new InterpreterRuntimeException("invalid data");
+                }
+                params.add(copyVar);
+            }
+
+            //function is user created
+            if(!functionCalled.isBuiltIn()){
+                //checks if correct amount of parameters are passed in
+                if(functionCalled.getParameters().size() != node.getParametersList().size()){
+                    throw new InterpreterRuntimeException("incorrect parameters passed in to function " + node.getFunctionName()
+                        + " user passed in " + node.getParametersList().size() + " required number of params: " + functionCalled.getParameters().size());
+                }
+                interpretFunction(functionCalled, params);
+            }
+            //function is built in
+            else{
+                ((BuiltIn) functionCalled).execute(params);
+            }
+
+            for(int i = 0; i < params.size(); i++){
+                if(functionCalled.isBuiltIn()){
+                    if((functionCalled.isVariadic() && !functionCalled.getFunctionName().equals("Write")) || (((BuiltIn) functionCalled).isVar(i) && node.getParametersList().get(i).isVar)){
+                        if(localVars.get(node.getParametersList().get(i).varIdentifier.getName()).isChangeable()) {
+                            if (localVars.get(node.getParametersList().get(i).varIdentifier.getName()) instanceof IntegerDataType) {
+                                ((IntegerDataType) localVars.get(node.getParametersList().get(i).varIdentifier.getName())).setData((int) params.get(i).getData());
+                            } else if (localVars.get(node.getParametersList().get(i).varIdentifier.getName()) instanceof RealDataType) {
+                                ((RealDataType) localVars.get(node.getParametersList().get(i).varIdentifier.getName())).setData((float) params.get(i).getData());
+                            } else if (localVars.get(node.getParametersList().get(i).varIdentifier.getName()) instanceof StringDataType) {
+                                ((StringDataType) localVars.get(node.getParametersList().get(i).varIdentifier.getName())).fromString(params.get(i).toString());
+                            } else if (localVars.get(node.getParametersList().get(i).varIdentifier.getName()) instanceof CharacterDataType) {
+                                ((CharacterDataType) localVars.get(node.getParametersList().get(i).varIdentifier.getName())).setData((char) params.get(i).getData());
+                            } else if (localVars.get(node.getParametersList().get(i).varIdentifier.getName()) instanceof BooleanDataType) {
+                                ((BooleanDataType) localVars.get(node.getParametersList().get(i).varIdentifier.getName())).setData((boolean) params.get(i).getData());
+                            }
+                        }else{
+                            throw new InterpreterRuntimeException("attempting to mark a constant variable " + node.getParametersList().get(i).varIdentifier.getName() + " as var in a function call");
+                        }
+                    }
+                }
+                else{
+                    if(functionCalled.getParameters().get(i).isVar() && node.getParametersList().get(i).isVar){
+                        if(localVars.get(node.getParametersList().get(i).varIdentifier.getName()).isChangeable()) {
+                            if (localVars.get(node.getParametersList().get(i).varIdentifier.getName()) instanceof IntegerDataType) {
+                                ((IntegerDataType) localVars.get(node.getParametersList().get(i).varIdentifier.getName())).setData((int) params.get(i).getData());
+                            } else if (localVars.get(node.getParametersList().get(i).varIdentifier.getName()) instanceof RealDataType) {
+                                ((RealDataType) localVars.get(node.getParametersList().get(i).varIdentifier.getName())).setData((float) params.get(i).getData());
+                            } else if (localVars.get(node.getParametersList().get(i).varIdentifier.getName()) instanceof StringDataType) {
+                                ((StringDataType) localVars.get(node.getParametersList().get(i).varIdentifier.getName())).fromString(params.get(i).toString());
+                            } else if (localVars.get(node.getParametersList().get(i).varIdentifier.getName()) instanceof CharacterDataType) {
+                                ((CharacterDataType) localVars.get(node.getParametersList().get(i).varIdentifier.getName())).setData((char) params.get(i).getData());
+                            } else if (localVars.get(node.getParametersList().get(i).varIdentifier.getName()) instanceof BooleanDataType) {
+                                ((BooleanDataType) localVars.get(node.getParametersList().get(i).varIdentifier.getName())).setData((boolean) params.get(i).getData());
+                            }
+                            else{
+                                throw new InterpreterRuntimeException("attempting to mark a constant variable " + node.getParametersList().get(i).varIdentifier.getName() + " as var in a function call");
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        else{
+            throw new InterpreterRuntimeException("attempting to call function "
+                    + node.getFunctionName() + " that is not present in the program or a builtin method");
+        }
+    }
 
     /**
      * interprets a math op node
@@ -484,7 +648,4 @@ public class Interpreter {
         }
         throw new InterpreterRuntimeException("attempting to compare data of 2 different types");
     }
-
-
-
 }

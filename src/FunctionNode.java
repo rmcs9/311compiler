@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 6
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 3/26/23
+ * 4/17/23
  */
 
 import javax.lang.model.element.VariableElement;
@@ -17,15 +17,15 @@ public class FunctionNode extends Node{
     /**
      * list of parameters contained in the function
      */
-    LinkedList<VariableNode> parameters;
+    private LinkedList<VariableNode> parameters;
     /**
      * list of variables listed under the function
      */
-    LinkedList<VariableNode> variables;
+    private LinkedList<VariableNode> variables;
     /**
      * list of statements executed by the function
      */
-    LinkedList<StatementNode> statements;
+    private LinkedList<StatementNode> statements;
 
     /**
      * empty constucter for function node
@@ -94,7 +94,15 @@ public class FunctionNode extends Node{
         return statements;
     }
 
+    public LinkedList<VariableNode> getParameters(){
+        return parameters;
+    }
+
     public boolean isVariadic(){
+        return false;
+    }
+
+    public boolean isBuiltIn(){
         return false;
     }
 

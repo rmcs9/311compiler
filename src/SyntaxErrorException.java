@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 4
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 3/5/23
+ * 4/17/23
  */
 public class SyntaxErrorException extends RuntimeException{
     /**
@@ -33,8 +33,7 @@ public class SyntaxErrorException extends RuntimeException{
      * @param custommsg a custom message containing information about why the exception was thrown
      */
     public SyntaxErrorException(String custommsg){
-        System.out.println(custommsg);
-        System.exit(0);
+        super(custommsg);
     }
 
     /**

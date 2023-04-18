@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 
 import java.io.IOException;
@@ -59,10 +59,10 @@ public class Shank {
         ((ProgramNode) test).addFunction(new BuiltInEnd());
 
         System.out.printf(test.toString());
-
-        Interpreter interpreter = new Interpreter();
-        interpreter.interpretFunction(((ProgramNode) test).getFunction("testFunction"));
-
-        System.out.printf(test.toString());
+        //semantic analysis call
+        SemanticAnalysis sem = new SemanticAnalysis((ProgramNode) test);
+        //interpreter is called and start method is interpreted
+        Interpreter interpreter = new Interpreter((ProgramNode) test);
+        interpreter.interpretFunction(((ProgramNode) test).getFunction("start"), null);
     }
 }

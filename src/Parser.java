@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 6
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 3/26/23
+ * 4/17/23
  */
 
 import java.util.LinkedList;
@@ -506,7 +506,7 @@ public class Parser {
                     token = matchAndRemove(Token.tokenType.INTEGER);
                     if (token != null) {
                         while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.INTEGER, true));
+                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.INTEGER, true, true));
                         }
                     } else {
                         token = matchAndRemove(Token.tokenType.REAL);
@@ -514,7 +514,7 @@ public class Parser {
 
                     if (token != null && !varNameHolder.isEmpty()) {
                         while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.REAL, true));
+                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.REAL, true, true));
                         }
                     } else {
                         token = matchAndRemove(Token.tokenType.BOOLEAN);
@@ -522,7 +522,7 @@ public class Parser {
 
                     if (token != null && !varNameHolder.isEmpty()) {
                         while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.BOOLEAN, true));
+                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.BOOLEAN, true, true));
                         }
                     } else {
                         token = matchAndRemove(Token.tokenType.CHARACTERLITERAL);
@@ -530,7 +530,7 @@ public class Parser {
 
                     if (token != null && !varNameHolder.isEmpty()) {
                         while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.CHARACTER, true));
+                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.CHARACTER, true, true));
                         }
                     } else {
                         token = matchAndRemove(Token.tokenType.STRINGLITERAL);
@@ -538,7 +538,7 @@ public class Parser {
 
                     if (token != null && !varNameHolder.isEmpty()) {
                         while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.STRING, true));
+                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.STRING, true, true));
                         }
                     } else {
                         token = matchAndRemove(Token.tokenType.ARRAY);
@@ -552,27 +552,27 @@ public class Parser {
                             switch (token.getTokenType()) {
                                 case INTEGER:
                                     while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.INTEGER, -1, -1, true));
+                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.INTEGER, -1, -1, true, true, true));
                                     }
                                     break;
                                 case REAL:
                                     while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.REAL, -1, -1, true));
+                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.REAL, -1, -1, true, true, true));
                                     }
                                     break;
                                 case BOOLEAN:
                                     while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.BOOLEAN, -1, -1, true));
+                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.BOOLEAN, -1, -1, true,true, true));
                                     }
                                     break;
                                 case CHARACTERLITERAL:
                                     while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.CHARACTER, -1, -1, true));
+                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.CHARACTER, -1, -1, true, true, true));
                                     }
                                     break;
                                 case STRINGLITERAL:
                                     while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.STRING, -1, -1, true));
+                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.STRING, -1, -1, true,true, true));
                                     }
                                     break;
                                 default:
@@ -1173,7 +1173,7 @@ public class Parser {
                 //call factor to get a VariableReferenceNode returned
                 param = factor();
                 //add current parameter to the parameters list
-                functionCallParams.add(new ParameterNode(param));
+                functionCallParams.add(new ParameterNode((VariableReferenceNode) param, true));
             }
             //else it's just a normal shank expression
             else{
@@ -1183,7 +1183,13 @@ public class Parser {
                     throw new SyntaxErrorException("no valid expression found in function call parameters at line " + peek(0).getTokenLine());
                 }
                 //add it to the list
-                functionCallParams.add(new ParameterNode(param));
+                if(param instanceof VariableReferenceNode){
+                    functionCallParams.add(new ParameterNode((VariableReferenceNode) param, false));
+                }
+                else{
+                    functionCallParams.add(new ParameterNode(param));
+                }
+
             }
             //makes sure comma is in between all parameters
             if(matchAndRemove(Token.tokenType.COMMA) == null && peek(0).getTokenType() != Token.tokenType.ENDOFLINE){

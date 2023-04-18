@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 6
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 3/26/23
+ * 4/17/23
  */
 
 import java.util.LinkedList;
@@ -12,11 +12,11 @@ public class FunctionCallNode extends StatementNode{
     /**
      * name of the function being called
      */
-    String functionName;
+    private String functionName;
     /**
      * list of parameters listed with the function call
      */
-    LinkedList<ParameterNode> parametersList;
+    private LinkedList<ParameterNode> parametersList;
 
     /**
      * contructor for a FunctionCallNode
@@ -26,6 +26,14 @@ public class FunctionCallNode extends StatementNode{
     public FunctionCallNode(String funcname, LinkedList<ParameterNode> params){
         this.functionName = funcname;
         this.parametersList = params;
+    }
+
+    public String getFunctionName(){
+        return functionName;
+    }
+
+    public LinkedList<ParameterNode> getParametersList(){
+        return parametersList;
     }
 
     /**

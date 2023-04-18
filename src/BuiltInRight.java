@@ -1,13 +1,13 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 import java.util.LinkedList;
 
-public class BuiltInRight extends FunctionNode{
+public class BuiltInRight extends BuiltIn{
     /**
      * getter method for the name of this function. used as a key in the programNode hashmap
      * @return "Right" as a String
@@ -37,12 +37,14 @@ public class BuiltInRight extends FunctionNode{
             }else{throw new InterpreterRuntimeException("second paramter of Right method must be of type integer");}
         }else{throw new InterpreterRuntimeException("first parameter of Right method must be of type string");}
     }
-
+    public boolean isVar(int paramNumber){
+        return paramNumber == 2;
+    }
     /**
      * toString method for Right function
      * @return a string containing information about the function including its parameters and what it does
      */
     public String toString(){
-        return "function Right\nParameters: someString, someInt, newString\nreturns newString as last length characters of someString";
+        return "function Right\nParameters: someString, someInt, var newString\nreturns newString as last length characters of someString";
     }
 }

@@ -1,14 +1,14 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 
 import java.util.LinkedList;
 
-public class BuiltInStart extends FunctionNode{
+public class BuiltInStart extends BuiltIn{
     /**
      * getter method for the name of this function
      * @return "Start" as a string
@@ -34,7 +34,9 @@ public class BuiltInStart extends FunctionNode{
             }else{throw new InterpreterRuntimeException("second parameter of Start method must be of type var integer");}
         }else{throw new InterpreterRuntimeException("first parameter of Start method must be of type Array");}
     }
-
+    public boolean isVar(int paramNumber){
+        return paramNumber == 1;
+    }
     /**
      * tosString method for the Start function
      * @return a string containing information about the method including its parameters and what it does

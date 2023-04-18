@@ -1,13 +1,13 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 
 import java.util.LinkedList;
-public class BuiltInEnd extends FunctionNode{
+public class BuiltInEnd extends BuiltIn{
     /**
      * getter method for the name of this function. Used as a key for the programNode hashmap
      * @return "End" as a String
@@ -34,6 +34,10 @@ public class BuiltInEnd extends FunctionNode{
             else{throw new InterpreterRuntimeException("second parameter in array end method must be a var of type integer");}
         }
         else{throw new InterpreterRuntimeException("first parameter in array end method must be of type array");}
+    }
+
+    public boolean isVar(int paramNumber){
+        return paramNumber == 1;
     }
 
     /**

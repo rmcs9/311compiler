@@ -1,12 +1,12 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 import java.util.LinkedList;
-public class BuiltInRealToInteger extends FunctionNode{
+public class BuiltInRealToInteger extends BuiltIn{
     /**
      * getter method for the name of this function. used as a key in the programNode hashmap
      * @return "RealToInteger" as a string
@@ -32,7 +32,9 @@ public class BuiltInRealToInteger extends FunctionNode{
             }else{throw new InterpreterRuntimeException("second parameter in RealToInteger method must be a var integer");}
         }else{throw new InterpreterRuntimeException("first parameter in RealToInteger method must be of type real");}
     }
-
+    public boolean isVar(int paramNumber){
+        return paramNumber == 1;
+    }
     /**
      * toString method for RealToInteger method
      * @return information about the method including params and what it does

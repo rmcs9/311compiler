@@ -1,13 +1,13 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 
 import java.util.LinkedList;
-public class BuiltInIntegerToReal extends FunctionNode{
+public class BuiltInIntegerToReal extends BuiltIn{
     /**
      * getter method for the name of this function. used as a key in the programNode hashmap
      * @return "IntegerToReal" as a String
@@ -34,6 +34,10 @@ public class BuiltInIntegerToReal extends FunctionNode{
             else{throw new InterpreterRuntimeException("second parameter in IntegerToReal method must be of type Real");}
         }
         else{throw new InterpreterRuntimeException("first parameter in IntegerToReal method must be of type int");}
+    }
+
+    public boolean isVar(int paramNumber){
+        return paramNumber == 1;
     }
 
     /**

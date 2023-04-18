@@ -1,15 +1,15 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 
 import java.util.LinkedList;
 import java.util.Random;
 
-public class BuiltInGetRandom extends FunctionNode{
+public class BuiltInGetRandom extends BuiltIn{
     /**
      * getter method for the name of this function. used as a key for the programNode hashmap
      * @return "GetRandom" as a String
@@ -38,11 +38,14 @@ public class BuiltInGetRandom extends FunctionNode{
         }
     }
 
+    public boolean isVar(int paramNumber){
+        return paramNumber == 0;
+    }
     /**
      * toString method for GetRandom function
      * @return a string with info about the function including its parameters and what the function does
      */
     public String toString(){
-        return "function: GetRandom\nParameters: var randomInt\n randomInt returns as a random integer value";
+        return "function: GetRandom\nParameters: var randomInt\nrandomInt returns as a random integer value";
     }
 }

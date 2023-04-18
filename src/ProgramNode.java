@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 
 import java.util.Collection;
@@ -38,6 +38,10 @@ public class ProgramNode extends Node{
 
     public FunctionNode getFunction(String key){
         return functions.get(key);
+    }
+
+    public LinkedList<String> getKeys(){
+        return functionNames;
     }
 
     /**

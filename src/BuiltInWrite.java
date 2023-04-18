@@ -1,14 +1,14 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 
 import java.util.LinkedList;
 
-public class BuiltInWrite extends FunctionNode{
+public class BuiltInWrite extends BuiltIn{
     /**
      * getter method for the name of this function
      * @return "Write" as a string
@@ -27,6 +27,11 @@ public class BuiltInWrite extends FunctionNode{
             System.out.print(interpreterDataType.toString() + " ");
         }
         System.out.print("\n");
+    }
+
+
+    public boolean isVar(int paramNumber){
+        return false;
     }
 
     /**

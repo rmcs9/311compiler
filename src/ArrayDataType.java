@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 
 public class ArrayDataType extends InterpreterDataType{
@@ -96,6 +96,10 @@ public class ArrayDataType extends InterpreterDataType{
      */
     public Object getData() {
         return this.array;
+    }
+
+    public boolean isChangeable(){
+        return true;
     }
 
 }

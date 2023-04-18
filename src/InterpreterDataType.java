@@ -1,9 +1,9 @@
 /**
  * ICSI 311
- * Assignment 7
+ * Assignment 9
  * Ryan McSweeney
  * RM483514
- * 4/2/23
+ * 4/17/23
  */
 public abstract class InterpreterDataType {
     public abstract String toString();
@@ -12,7 +12,8 @@ public abstract class InterpreterDataType {
 
     public abstract Object getData();
 
-    public InterpreterDataType(){
+    public abstract boolean isChangeable();
 
+    public InterpreterDataType(){
     }
 }
