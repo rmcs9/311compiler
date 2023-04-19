@@ -5,6 +5,9 @@
  * RM483514
  * 4/17/23
  */
+import Lexer.*;
+import Parser.*;
+import Interpreter.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
