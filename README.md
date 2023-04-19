@@ -19,6 +19,15 @@ Read more about Shank and its design in the attached langauge definition below:
 ### *[Interpreter](https://github.com/rmcs9/311compiler/edit/main/README.md#interpreter-1)*
 
 ---
+## TO-DO's 
+
+- [ ] finish README
+- [ ] Interpreter.InterpretFunctionCall cleanup
+- [ ] Interpreter.InterpretFunction cleanup
+- [x] Parser.boolCompare cleanup
+- [ ] Parser.ParameterDeclarations, Variables, Constants cleanup
+
+---
 ## Lexer
 
 ---
