@@ -12,7 +12,7 @@ Read more about Shank and its design in the attached langauge definition below:
 
 ## Program Contents
 
-![image](https://user-images.githubusercontent.com/128118033/232992355-2784bedd-10ab-4dc1-a12a-785a1328380c.png)
+![image](https://user-images.githubusercontent.com/128118033/233144475-495cadb5-1171-4619-bc58-8f6cb9de350c.png)
 
 ### *[Lexer](https://github.com/rmcs9/311compiler/edit/main/README.md#lexer)*
 ### *[Parser](https://github.com/rmcs9/311compiler/edit/main/README.md#parser-1)*
