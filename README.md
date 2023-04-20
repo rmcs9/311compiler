@@ -6,7 +6,8 @@
 Shank draws many design concepts and features from other popular programming langauges, including C#, javascript, Python and more. 
 Read more about Shank and its design in the attached langauge definition below:
 
-### [Language Definition.docx](https://github.com/rmcs9/311compiler/files/11269582/Language.Definition.docx)
+
+### [Shank_Langauge_Definition.pdf](https://github.com/rmcs9/Shank-Interpreter/files/11290787/Shank_Langauge_Definition.pdf)
 
 ---
 
