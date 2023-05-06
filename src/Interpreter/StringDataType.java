@@ -37,4 +37,8 @@ public class StringDataType extends InterpreterDataType{
     public Object getData(){
         return this.value;
     }
+
+    public void setData(Object data){
+        value = (String) data;
+    }
 }

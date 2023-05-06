@@ -19,6 +19,8 @@ public abstract class InterpreterDataType {
 
     public abstract boolean isChangeable();
 
+    public abstract void setData(Object data);
+
     public InterpreterDataType(){
     }
 }

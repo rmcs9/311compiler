@@ -44,7 +44,7 @@ public class RealDataType extends InterpreterDataType{
         return this.value;
     }
 
-    public void setData(float data){
-        value = data;
+    public void setData(Object data){
+        value = (float) data;
     }
 }

@@ -60,7 +60,7 @@ public class CharacterDataType extends InterpreterDataType{
      * setter method for the data in this objec
      * @param d char being passed in
      */
-    public void setData(char d){
-        value = d;
+    public void setData(Object d){
+        value = (char) d;
     }
 }

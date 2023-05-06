@@ -190,7 +190,7 @@ public class Parser {
         Token factor = new Token();
         boolean isNegative = false;
 
-        if (    peek(0).getTokenType() == Token.tokenType.MINUS ||
+        if (peek(0).getTokenType() == Token.tokenType.MINUS ||
                 peek(0).getTokenType() == Token.tokenType.NUMBER ||
                 peek(0).getTokenType() == Token.tokenType.LPAREN ||
                 peek(0).getTokenType() == Token.tokenType.IDENTIFIER ||
@@ -225,9 +225,6 @@ public class Parser {
                     }
                 }
             }
-//            else if(factor == null && isNegative){
-//                throw new SyntaxErrorException("negative sign appended to a non number at line " + peek(0).getTokenLine());
-//            }
             else {
                 factor = matchAndRemove(Token.tokenType.IDENTIFIER);
             }

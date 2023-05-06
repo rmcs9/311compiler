@@ -64,7 +64,7 @@ public class BooleanDataType extends InterpreterDataType{
      * setter method for the data in this object
      * @param bool the boolean value to be set in this object
      */
-    public void setData(boolean bool){
-        value = bool;
+    public void setData(Object bool){
+        value = (boolean) bool;
     }
 }

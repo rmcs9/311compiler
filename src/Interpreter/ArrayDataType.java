@@ -103,4 +103,8 @@ public class ArrayDataType extends InterpreterDataType{
         return true;
     }
 
+    public void setData(Object data){
+        array = (InterpreterDataType[]) data;
+    }
+
 }

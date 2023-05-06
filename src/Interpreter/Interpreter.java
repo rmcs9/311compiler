@@ -310,30 +310,30 @@ public class Interpreter {
             InterpreterDataType target = InterpretVariableReferenceNode(node.getTarget());
             try {
                 if (target instanceof IntegerDataType) {
-                    if(!((IntegerDataType) target).isChangeable()){
+                    if(!target.isChangeable()) {
                         throw new InterpreterRuntimeException("constant immutable variable cannot be assigned a value");
                     }
-                    ((IntegerDataType) target).setData((int) expression(node.getValue()).getData());
+                     target.setData(expression(node.getValue()).getData());
                 } else if (target instanceof RealDataType) {
-                    if(!((RealDataType) target).isChangeable()){
+                    if(!target.isChangeable()){
                         throw new InterpreterRuntimeException("constant immutable variable cannot be assigned a value");
                     }
-                    ((RealDataType) target).setData((float) expression(node.getValue()).getData());
+                    target.setData(expression(node.getValue()).getData());
                 } else if (target instanceof StringDataType) {
-                    if(!((StringDataType) target).isChangeable()){
+                    if(!target.isChangeable()){
                         throw new InterpreterRuntimeException("constant immutable variable cannot be assigned a value");
                     }
                     target.fromString((String) expression(node.getValue()).getData());
                 } else if (target instanceof CharacterDataType) {
-                    if(!((CharacterDataType) target).isChangeable()){
+                    if(!target.isChangeable()){
                         throw new InterpreterRuntimeException("constant immutable variable cannot be assigned a value");
                     }
-                    ((CharacterDataType) target).setData((char) expression(node.getValue()).getData());
+                    target.setData(expression(node.getValue()).getData());
                 } else if (target instanceof BooleanDataType) {
-                    if(!((BooleanDataType) target).isChangeable()){
+                    if(!target.isChangeable()){
                         throw new InterpreterRuntimeException("constant immutable variable cannot be assigned a value");
                     }
-                    ((BooleanDataType) target).setData((boolean) expression(node.getValue()).getData());
+                    target.setData(expression(node.getValue()).getData());
                 }
             }
             catch(ClassCastException e){
@@ -363,7 +363,7 @@ public class Interpreter {
                     currentVar = expression(parameterNode.getParamExpression());
                 }
                 else{
-                    currentVar = expression(parameterNode.getParamExpression());
+                    currentVar = expression(parameterNode.getVarIdentifier());
                 }
 
                 InterpreterDataType copyVar;
@@ -409,17 +409,7 @@ public class Interpreter {
                 if(functionCalled.isBuiltIn()){
                     if((functionCalled.isVariadic() && !functionCalled.getFunctionName().equals("Write")) || (((BuiltIn) functionCalled).isVar(i) && node.getParametersList().get(i).isVar())){
                         if(localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()).isChangeable()) {
-                            if (localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()) instanceof IntegerDataType) {
-                                ((IntegerDataType) localVars.get(node.getParametersList().get(i).getVarIdentifier().getName())).setData((int) params.get(i).getData());
-                            } else if (localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()) instanceof RealDataType) {
-                                ((RealDataType) localVars.get(node.getParametersList().get(i).getVarIdentifier().getName())).setData((float) params.get(i).getData());
-                            } else if (localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()) instanceof StringDataType) {
-                                ((StringDataType) localVars.get(node.getParametersList().get(i).getVarIdentifier().getName())).fromString(params.get(i).toString());
-                            } else if (localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()) instanceof CharacterDataType) {
-                                ((CharacterDataType) localVars.get(node.getParametersList().get(i).getVarIdentifier().getName())).setData((char) params.get(i).getData());
-                            } else if (localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()) instanceof BooleanDataType) {
-                                ((BooleanDataType) localVars.get(node.getParametersList().get(i).getVarIdentifier().getName())).setData((boolean) params.get(i).getData());
-                            }
+                            localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()).setData(params.get(i).getData());
                         }else{
                             throw new InterpreterRuntimeException("attempting to mark a constant variable " + node.getParametersList().get(i).getVarIdentifier().getName() + " as var in a function call");
                         }
@@ -428,20 +418,10 @@ public class Interpreter {
                 else{
                     if(functionCalled.getParameters().get(i).isVar() && node.getParametersList().get(i).isVar()){
                         if(localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()).isChangeable()) {
-                            if (localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()) instanceof IntegerDataType) {
-                                ((IntegerDataType) localVars.get(node.getParametersList().get(i).getVarIdentifier().getName())).setData((int) params.get(i).getData());
-                            } else if (localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()) instanceof RealDataType) {
-                                ((RealDataType) localVars.get(node.getParametersList().get(i).getVarIdentifier().getName())).setData((float) params.get(i).getData());
-                            } else if (localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()) instanceof StringDataType) {
-                                ((StringDataType) localVars.get(node.getParametersList().get(i).getVarIdentifier().getName())).fromString(params.get(i).toString());
-                            } else if (localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()) instanceof CharacterDataType) {
-                                ((CharacterDataType) localVars.get(node.getParametersList().get(i).getVarIdentifier().getName())).setData((char) params.get(i).getData());
-                            } else if (localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()) instanceof BooleanDataType) {
-                                ((BooleanDataType) localVars.get(node.getParametersList().get(i).getVarIdentifier().getName())).setData((boolean) params.get(i).getData());
-                            }
-                            else{
-                                throw new InterpreterRuntimeException("attempting to mark a constant variable " + node.getParametersList().get(i).getVarIdentifier().getName() + " as var in a function call");
-                            }
+                            localVars.get(node.getParametersList().get(i).getVarIdentifier().getName()).setData(params.get(i).getData());
+                        }
+                        else{
+                            throw new InterpreterRuntimeException("attempting to mark a constant variable " + node.getParametersList().get(i).getVarIdentifier().getName() + " as var in a function call");
                         }
                     }
                 }

@@ -57,7 +57,7 @@ public class IntegerDataType extends InterpreterDataType{
      * setter method for the data in this object
      * @param data integer being passed in
      */
-    public void setData(int data){
-        value = data;
+    public void setData(Object data){
+        value = (int) data;
     }
 }
