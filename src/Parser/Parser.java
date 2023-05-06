@@ -73,7 +73,7 @@ public class Parser {
      *
      * @return the program node created
      */
-    public Node parse() {
+    public ProgramNode parse() {
         FunctionNode func;
         ProgramNode program = new ProgramNode();
         while (!parserTokens.isEmpty()) {
