@@ -9,6 +9,10 @@ Read more about Shank and its design in the attached langauge definition below:
 
 ### [Shank_Langauge_Definition.pdf](https://github.com/rmcs9/Shank-Interpreter/files/11290787/Shank_Langauge_Definition.pdf)
 
+## How to Use
+
+Make a new .shank file, write and save the code, compile the program and pass in the file path to your .shank file as the first argument
+
 ---
 
 ## Program Contents
