@@ -67,7 +67,7 @@ public class Shank {
         test.addFunction(new BuiltInStart());
         test.addFunction(new BuiltInEnd());
 
-        System.out.println("DEBUG INFO: Would you like to print Lexers output to console? (y/n)");
+        System.out.println("DEBUG INFO: Would you like to print Parsers output to console? (y/n)");
         answer = debugPrompter.next();
         if(answer.toCharArray()[0] == 'y' || answer.toCharArray()[0] == 'Y'){
             System.out.printf(test.toString());

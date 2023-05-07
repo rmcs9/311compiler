@@ -431,27 +431,27 @@ public class Parser {
                             switch (token.getTokenType()) {
                                 case INTEGER:
                                     while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.INTEGER, -1, -1, false));
+                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.INTEGER, -1, -1, false, true));
                                     }
                                     break;
                                 case REAL:
                                     while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.REAL, -1, -1, false));
+                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.REAL, -1, -1, false, true));
                                     }
                                     break;
                                 case BOOLEAN:
                                     while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.BOOLEAN, -1, -1, false));
+                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.BOOLEAN, -1, -1, false, true));
                                     }
                                     break;
                                 case CHARACTERLITERAL:
                                     while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.CHARACTER, -1, -1, false));
+                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.CHARACTER, -1, -1, false, true));
                                     }
                                     break;
                                 case STRINGLITERAL:
                                     while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.STRING, -1, -1, false));
+                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.STRING, -1, -1, false,true));
                                     }
                                     break;
                                 default:

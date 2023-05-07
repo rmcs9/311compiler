@@ -7,6 +7,8 @@ package Interpreter;
  * 4/17/23
  */
 import Parser.*;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 public class ArrayDataType extends InterpreterDataType{
     /**
      * the starting index of the array
@@ -49,7 +51,24 @@ public class ArrayDataType extends InterpreterDataType{
      * @param arr the IDT array
      */
     public ArrayDataType(InterpreterDataType[] arr){
-        array = arr;
+        array = new InterpreterDataType[arr.length];
+        for(int i = 0; i < arr.length; i++){
+          if(arr[i] instanceof IntegerDataType){
+              array[i] = new IntegerDataType((int) arr[i].getData());
+          }
+          else if(arr[i] instanceof RealDataType){
+              array[i] = new RealDataType((float) arr[i].getData());
+          }
+          else if(arr[i] instanceof CharacterDataType){
+              array[i] = new CharacterDataType((char) arr[i].getData());
+          }
+          else if(arr[i] instanceof StringDataType){
+              array[i] = new StringDataType((String) arr[i].getData());
+          }
+          else if(arr[i] instanceof BooleanDataType){
+              array[i] = new BooleanDataType((boolean) arr[i].getData());
+          }
+        }
     }
 
     /**
