@@ -132,58 +132,70 @@ public class Interpreter {
         }
 
         for(int i = 0; i < func.getParameters().size(); i++){
-            switch(func.getParameters().get(i).getType()){
-                case INTEGER:
-                    if(params.get(i) instanceof IntegerDataType){
-                        localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
-                    }
-                    else{
-                        throw new InterpreterRuntimeException("incorrect type value passed in to param " +
-                                (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
-                                func.getParameters().get(i).getType());
-                    }
-                    break;
-                case REAL:
-                    if(params.get(i) instanceof RealDataType){
-                        localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
-                    }
-                    else{
-                        throw new InterpreterRuntimeException("incorrect type value passed in to param " +
-                                (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
-                                func.getParameters().get(i).getType());
-                    }
-                    break;
-                case STRING:
-                    if(params.get(i) instanceof StringDataType){
-                        localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
-                    }
-                    else{
-                        throw new InterpreterRuntimeException("incorrect type value passed in to param " +
-                                (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
-                                func.getParameters().get(i).getType());
-                    }
-                    break;
-                case CHARACTER:
-                    if(params.get(i) instanceof CharacterDataType){
-                        localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
-                    }
-                    else{
-                        throw new InterpreterRuntimeException("incorrect type value passed in to param " +
-                                (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
-                                func.getParameters().get(i).getType());
-                    }
-                    break;
-                case BOOLEAN:
-                    if(params.get(i) instanceof BooleanDataType){
-                        localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
-                    }
-                    else{
-                        throw new InterpreterRuntimeException("incorrect type value passed in to param " +
-                                (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
-                                func.getParameters().get(i).getType());
-                    }
-                    break;
+            if(!func.getParameters().get(i).isArray()){
+                switch(func.getParameters().get(i).getType()){
+                    case INTEGER:
+                        if(params.get(i) instanceof IntegerDataType){
+                            localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
+                        }
+                        else{
+                            throw new InterpreterRuntimeException("incorrect type value passed in to param " +
+                                    (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
+                                    func.getParameters().get(i).getType());
+                        }
+                        break;
+                    case REAL:
+                        if(params.get(i) instanceof RealDataType){
+                            localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
+                        }
+                        else{
+                            throw new InterpreterRuntimeException("incorrect type value passed in to param " +
+                                    (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
+                                    func.getParameters().get(i).getType());
+                        }
+                        break;
+                    case STRING:
+                        if(params.get(i) instanceof StringDataType){
+                            localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
+                        }
+                        else{
+                            throw new InterpreterRuntimeException("incorrect type value passed in to param " +
+                                    (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
+                                    func.getParameters().get(i).getType());
+                        }
+                        break;
+                    case CHARACTER:
+                        if(params.get(i) instanceof CharacterDataType){
+                            localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
+                        }
+                        else{
+                            throw new InterpreterRuntimeException("incorrect type value passed in to param " +
+                                    (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
+                                    func.getParameters().get(i).getType());
+                        }
+                        break;
+                    case BOOLEAN:
+                        if(params.get(i) instanceof BooleanDataType){
+                            localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
+                        }
+                        else{
+                            throw new InterpreterRuntimeException("incorrect type value passed in to param " +
+                                    (i + 1) + " in function " + func.getFunctionName() + ". correct type: " +
+                                    func.getParameters().get(i).getType());
+                        }
+                        break;
+                }
             }
+            else{
+                if(params.get(i) instanceof ArrayDataType){
+                    localVars.put(func.getParameters().get(i).getVariableName(), params.get(i));
+                }
+                else{
+                    throw new InterpreterRuntimeException("incorrect type value passed in to param " +
+                            (i + 1) + " in function " + func.getFunctionName() + ". correct type: ARRAY");
+                }
+            }
+
         }
         this.InterpretBlock(func.getStatements());
     }
