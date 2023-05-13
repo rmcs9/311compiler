@@ -7,7 +7,6 @@ package Interpreter;
  * 4/17/23
  */
 import Parser.*;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 public class ArrayDataType extends InterpreterDataType{
     /**

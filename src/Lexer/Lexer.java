@@ -54,8 +54,8 @@ public class Lexer {
             knownWords.put("integer", Token.tokenType.INTEGER);
             knownWords.put("real", Token.tokenType.REAL);
             knownWords.put("boolean", Token.tokenType.BOOLEAN);
-            knownWords.put("character", Token.tokenType.CHARACTERLITERAL);
-            knownWords.put("string", Token.tokenType.STRINGLITERAL);
+            knownWords.put("character", Token.tokenType.CHARACTER);
+            knownWords.put("string", Token.tokenType.STRING);
             knownWords.put("from", Token.tokenType.FROM);
             knownWords.put("to", Token.tokenType.TO);
             knownWords.put("var", Token.tokenType.VAR);
@@ -124,7 +124,7 @@ public class Lexer {
                                 throw new SyntaxErrorException(input.get(i + 1), lineCounter, "MORE THAN 1 CHARACTER INSIDE CHAR QUOTE");
                             }
                             else{
-                            tokens.add(new Token(Token.tokenType.CHARACTERLITERAL, input.get(i).toString(), lineCounter));
+                            tokens.add(new Token(Token.tokenType.CHARACTER, input.get(i).toString(), lineCounter));
                             i = i + 2;
                             machine.setStart();
                             }
@@ -280,7 +280,7 @@ public class Lexer {
                             accumulator += input.get(i);
                             i++;
                         } else {
-                            tokens.add(new Token(Token.tokenType.STRINGLITERAL, accumulator, lineCounter));
+                            tokens.add(new Token(Token.tokenType.STRING, accumulator, lineCounter));
                             accumulator = "";
                             machine.setStart();
                             i++;

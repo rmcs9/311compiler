@@ -27,10 +27,11 @@ Make a new .shank file, write and save the code, compile the program and pass in
 ## TO-DO's 
 
 - [ ] finish README
-- [x] Interpreter.InterpretFunctionCall cleanup
 - [ ] Interpreter.InterpretFunction cleanup
+- [ ] var handling exceptions
+- [x] Interpreter.InterpretFunctionCall cleanup
 - [x] Parser.boolCompare cleanup
-- [ ] Parser.ParameterDeclarations, Variables, Constants cleanup
+- [x] Parser.ParameterDeclarations, Variables, Constants cleanup
 
 ---
 ## Lexer

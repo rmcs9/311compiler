@@ -194,8 +194,8 @@ public class Parser {
                 peek(0).getTokenType() == Token.tokenType.NUMBER ||
                 peek(0).getTokenType() == Token.tokenType.LPAREN ||
                 peek(0).getTokenType() == Token.tokenType.IDENTIFIER ||
-                peek(0).getTokenType() == Token.tokenType.STRINGLITERAL ||
-                peek(0).getTokenType() == Token.tokenType.CHARACTERLITERAL ||
+                peek(0).getTokenType() == Token.tokenType.STRING ||
+                peek(0).getTokenType() == Token.tokenType.CHARACTER ||
                 peek(0).getTokenType() == Token.tokenType.TRUE ||
                 peek(0).getTokenType() == Token.tokenType.FALSE) {
 
@@ -242,14 +242,14 @@ public class Parser {
                 }
                 return new VariableReferenceNode(factor.getTokenContents());
             } else {
-                factor = matchAndRemove(Token.tokenType.STRINGLITERAL);
+                factor = matchAndRemove(Token.tokenType.STRING);
             }
 
             if(factor != null){
                 return new StringNode(factor.getTokenContents());
             }
             else{
-                factor = matchAndRemove(Token.tokenType.CHARACTERLITERAL);
+                factor = matchAndRemove(Token.tokenType.CHARACTER);
             }
 
             if(factor != null){
@@ -382,83 +382,25 @@ public class Parser {
                 token = matchAndRemove(Token.tokenType.COLON);
                 //code inside this if statement determines the type of the parameters and loops to create new variable Nodes
                 if (token != null) {
-                    token = matchAndRemove(Token.tokenType.INTEGER);
-                    if (token != null) {
+                    if(peek(0).getTokenType() != Token.tokenType.ARRAY) {
+                        token = matchAndRemove(peek(0).getTokenType());
                         while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.INTEGER, false));
+                            parameterList.add(new VariableNode(varNameHolder.remove(), token.getTokenType().toString(), false));
                         }
-                    } else {
-                        token = matchAndRemove(Token.tokenType.REAL);
                     }
-
-                    if (token != null && !varNameHolder.isEmpty()) {
-                        while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.REAL, false));
-                        }
-                    } else {
-                        token = matchAndRemove(Token.tokenType.BOOLEAN);
-                    }
-
-                    if (token != null && !varNameHolder.isEmpty()) {
-                        while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.BOOLEAN, false));
-                        }
-                    } else {
-                        token = matchAndRemove(Token.tokenType.CHARACTERLITERAL);
-                    }
-
-                    if (token != null && !varNameHolder.isEmpty()) {
-                        while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.CHARACTER, false));
-                        }
-                    } else {
-                        token = matchAndRemove(Token.tokenType.STRINGLITERAL);
-                    }
-
-                    if (token != null && !varNameHolder.isEmpty()) {
-                        while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.STRING, false));
-                        }
-                    } else {
-                        token = matchAndRemove(Token.tokenType.ARRAY);
-                    }
-
-                    if (token != null && !varNameHolder.isEmpty()) {
-                        token = matchAndRemove(Token.tokenType.OF);
-                        if (token != null) {
+                    else if(peek(0).getTokenType() == Token.tokenType.ARRAY){
+                        if(matchAndRemove(Token.tokenType.OF) != null){
                             token = matchAndRemove(peek(0).getTokenType());
-
-                            switch (token.getTokenType()) {
-                                case INTEGER:
-                                    while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.INTEGER, -1, -1, false, true));
-                                    }
-                                    break;
-                                case REAL:
-                                    while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.REAL, -1, -1, false, true));
-                                    }
-                                    break;
-                                case BOOLEAN:
-                                    while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.BOOLEAN, -1, -1, false, true));
-                                    }
-                                    break;
-                                case CHARACTERLITERAL:
-                                    while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.CHARACTER, -1, -1, false, true));
-                                    }
-                                    break;
-                                case STRINGLITERAL:
-                                    while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.STRING, -1, -1, false,true));
-                                    }
-                                    break;
-                                default:
-                                    throw new SyntaxErrorException("no array datatype specified at line " + peek(0).getTokenLine());
-
+                            while(!varNameHolder.isEmpty()){
+                                parameterList.add(new VariableNode(varNameHolder.remove(), token.getTokenType().toString(), -1, -1, false, true));
                             }
                         }
+                        else{
+                            throw new SyntaxErrorException("of keyword expected after declaration of array in parameters at line " + peek(0).getTokenLine());
+                        }
+                    }
+                    else{
+                        throw new SyntaxErrorException("invalid type declared in parameters at line " + peek(0).getTokenLine());
                     }
                 } else {
                     throw new SyntaxErrorException("colon expected after parameter identifier declarations at line " + peek(0).getTokenLine());
@@ -471,7 +413,9 @@ public class Parser {
                 matchAndRemove(Token.tokenType.VAR);
 
                 Token token = matchAndRemove(Token.tokenType.IDENTIFIER);
-
+                if(token == null){
+                    throw new SyntaxErrorException("identifier expected after var keyword in parameters at line " + peek(0).getTokenLine());
+                }
                 varNameHolder.add(token.getTokenContents());
 
                 while (peek(0).getTokenType() == Token.tokenType.COMMA) {
@@ -480,87 +424,36 @@ public class Parser {
                     if (token != null) {
                         varNameHolder.add(token.getTokenContents());
                     }
+                    else{
+                        throw new SyntaxErrorException("identfier expected after comma in parameter declarations at line " + peek(0).getTokenLine());
+                    }
                 }
                 token = matchAndRemove(Token.tokenType.COLON);
                 if (token != null) {
-                    token = matchAndRemove(Token.tokenType.INTEGER);
-                    if (token != null) {
-                        while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.INTEGER, true, true));
+                    if(peek(0).getTokenType() != Token.tokenType.ARRAY){
+                        token = matchAndRemove(peek(0).getTokenType());
+                        while(!varNameHolder.isEmpty()){
+                            parameterList.add(new VariableNode(varNameHolder.remove(), token.getTokenType().toString(), true, true));
                         }
-                    } else {
-                        token = matchAndRemove(Token.tokenType.REAL);
                     }
-
-                    if (token != null && !varNameHolder.isEmpty()) {
-                        while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.REAL, true, true));
-                        }
-                    } else {
-                        token = matchAndRemove(Token.tokenType.BOOLEAN);
-                    }
-
-                    if (token != null && !varNameHolder.isEmpty()) {
-                        while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.BOOLEAN, true, true));
-                        }
-                    } else {
-                        token = matchAndRemove(Token.tokenType.CHARACTERLITERAL);
-                    }
-
-                    if (token != null && !varNameHolder.isEmpty()) {
-                        while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.CHARACTER, true, true));
-                        }
-                    } else {
-                        token = matchAndRemove(Token.tokenType.STRINGLITERAL);
-                    }
-
-                    if (token != null && !varNameHolder.isEmpty()) {
-                        while (!varNameHolder.isEmpty()) {
-                            parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.STRING, true, true));
-                        }
-                    } else {
-                        token = matchAndRemove(Token.tokenType.ARRAY);
-                    }
-
-                    if (token != null && !varNameHolder.isEmpty()) {
-                        token = matchAndRemove(Token.tokenType.OF);
-                        if (token != null) {
+                    else if(peek(0).getTokenType() == Token.tokenType.ARRAY){
+                        matchAndRemove(Token.tokenType.ARRAY);
+                        if(matchAndRemove(Token.tokenType.OF) != null){
                             token = matchAndRemove(peek(0).getTokenType());
-
-                            switch (token.getTokenType()) {
-                                case INTEGER:
-                                    while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.INTEGER, -1, -1, true, true, true));
-                                    }
-                                    break;
-                                case REAL:
-                                    while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.REAL, -1, -1, true, true, true));
-                                    }
-                                    break;
-                                case BOOLEAN:
-                                    while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.BOOLEAN, -1, -1, true,true, true));
-                                    }
-                                    break;
-                                case CHARACTERLITERAL:
-                                    while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.CHARACTER, -1, -1, true, true, true));
-                                    }
-                                    break;
-                                case STRINGLITERAL:
-                                    while (!varNameHolder.isEmpty()) {
-                                        parameterList.add(new VariableNode(varNameHolder.remove(), VariableNode.VariableType.STRING, -1, -1, true,true, true));
-                                    }
-                                    break;
-                                default:
-                                    throw new SyntaxErrorException("no array datatype specified at line " + peek(0).getTokenLine());
-
+                            while(!varNameHolder.isEmpty()){
+                                parameterList.add(new VariableNode(varNameHolder.remove(), token.getTokenType().toString(), -1, -1, true, true, true));
                             }
                         }
+                        else{
+                            throw new SyntaxErrorException("of keyword expected after declaration of array in parameters at line " + peek(0).getTokenLine());
+                        }
                     }
+                    else{
+                        throw new SyntaxErrorException("invalid type declared in parameters at line " + peek(0).getTokenLine());
+                    }
+                }
+                else{
+                    throw new SyntaxErrorException("colon expected after parameter declaration on line " + peek(0).getTokenLine());
                 }
                 //expects a semi colon at the end of each parameter set
                 token = matchAndRemove(Token.tokenType.SEMICOLON);
@@ -586,14 +479,14 @@ public class Parser {
             //Identifier expected after constants declaration, if not found, expcetion is thrown
             token = matchAndRemove(Token.tokenType.IDENTIFIER);
             if (token == null) {
-                throw new SyntaxErrorException("invalid constant declaration at line " + peek(0).getTokenLine());
+                throw new SyntaxErrorException("identifier expected after constants keyword at line " + peek(0).getTokenLine());
             } else {
                 //identifier is copied to a string for the name of the variable
                 String constName = token.getTokenContents();
                 //equals expected after variable name, if not found, exception is thrown
                 token = matchAndRemove(Token.tokenType.EQUALS);
                 if (token == null) {
-                    throw new SyntaxErrorException("no equals found at constant declaration at line " + peek(0).getTokenLine());
+                    throw new SyntaxErrorException("no '=' found at constant declaration at line " + peek(0).getTokenLine());
                 } else {
                     //Variable type is determined using this switch case and a new variable node is created and added to the list
                     switch (peek(0).getTokenType()) {
@@ -636,8 +529,8 @@ public class Parser {
                                 }
                             }
                             break;
-                        case STRINGLITERAL:
-                            token = matchAndRemove(Token.tokenType.STRINGLITERAL);
+                        case STRING:
+                            token = matchAndRemove(Token.tokenType.STRING);
                             if (token != null) {
                                 constantsList.add(
                                         new VariableNode(
@@ -646,8 +539,8 @@ public class Parser {
                                                 new StringNode(token.getTokenContents())));
                             }
                             break;
-                        case CHARACTERLITERAL:
-                            token = matchAndRemove(Token.tokenType.CHARACTERLITERAL);
+                        case CHARACTER:
+                            token = matchAndRemove(Token.tokenType.CHARACTER);
                             if (token != null) {
                                 constantsList.add(
                                         new VariableNode(
@@ -678,8 +571,6 @@ public class Parser {
                             break;
                         default:
                             throw new SyntaxErrorException("invalid data type found at line " + peek(0).getTokenLine());
-
-
                     }
                 }
             }
@@ -707,6 +598,7 @@ public class Parser {
 
         //identifier is expected after variables keyword
         Token token = matchAndRemove(Token.tokenType.IDENTIFIER);
+        Token fromto;
 
 
         if (token != null) {
@@ -726,180 +618,120 @@ public class Parser {
             //colon is expected after variable names
             token = matchAndRemove(Token.tokenType.COLON);
             if (token != null) {
-                //code below determines the varible type and loops to add new varible nodes to the list
-                token = matchAndRemove(Token.tokenType.INTEGER);
-                if (token != null) {
-                    if(peek(0).getTokenType() == Token.tokenType.FROM) {
-                        //remove from
-                        matchAndRemove(Token.tokenType.FROM);
-                        //remove the number and make sure it returns properly, if not throw an exception
-                        token = matchAndRemove(Token.tokenType.NUMBER);
-                        if(token == null){
-                            throw new SyntaxErrorException("no number found after from type limit declaration on line: " + peek(0).getTokenLine());
-                        }
-                        //parse the int from the token
-                        from = Integer.parseInt(token.getTokenContents());
-                        //remove to
-                        if(matchAndRemove(Token.tokenType.TO) == null){
-                            throw new SyntaxErrorException("no to keyword found in type limit declaration on line: " + peek(0).getTokenLine());
-                        }
-                        //remove the number
-                        token = matchAndRemove(Token.tokenType.NUMBER);
-                        if(token == null){
-                            throw new SyntaxErrorException("no number found after to in type limit declaration on line: " + peek(0).getTokenLine());
-                        }
-                        //parse the int from the token
-                        to = Integer.parseInt(token.getTokenContents());
-                        //loop through the list and add new variables
-                        while(!variableNames.isEmpty()){
-                            variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.INTEGER, from, to, true, false));
-                        }
-                    }
-                    while (!variableNames.isEmpty()) {
-                        variablesList.add(new VariableNode(
-                                variableNames.remove(),
-                                VariableNode.VariableType.INTEGER,
-                                true));
-                    }
-                } else {
-                    token = matchAndRemove(Token.tokenType.REAL);
-                }
+                token = matchAndRemove(peek(0).getTokenType());
 
-                if (token != null && !variableNames.isEmpty()) {
-                    if(peek(0).getTokenType() == Token.tokenType.FROM){
-                        matchAndRemove(Token.tokenType.FROM);
-                        token = matchAndRemove(Token.tokenType.NUMBER);
-                        if(token == null){
-                            throw new SyntaxErrorException("number expected after from in type limit declaration at line: " + peek(0).getTokenLine());
+                switch (token.getTokenType()){
+                    case INTEGER:
+                    case STRING:
+                        if(peek(0).getTokenType() == Token.tokenType.FROM) {
+                            //remove from
+                            matchAndRemove(Token.tokenType.FROM);
+                            //remove the number and make sure it returns properly, if not throw an exception
+                            fromto = matchAndRemove(Token.tokenType.NUMBER);
+                            if(fromto == null){
+                                throw new SyntaxErrorException("no number found after from type limit declaration on line: " + peek(0).getTokenLine());
+                            }
+                            //parse the int from the token
+                            from = Integer.parseInt(fromto.getTokenContents());
+                            //remove to
+                            if(matchAndRemove(Token.tokenType.TO) == null){
+                                throw new SyntaxErrorException("no to keyword found in type limit declaration on line: " + peek(0).getTokenLine());
+                            }
+                            //remove the number
+                            fromto = matchAndRemove(Token.tokenType.NUMBER);
+                            if(fromto == null){
+                                throw new SyntaxErrorException("no number found after to in type limit declaration on line: " + peek(0).getTokenLine());
+                            }
+                            //parse the int from the token
+                            to = Integer.parseInt(fromto.getTokenContents());
+                            //loop through the list and add new variables
+                            while(!variableNames.isEmpty()){
+                                variablesList.add(new VariableNode(variableNames.remove(), token.getTokenType().toString(), from, to, true, false));
+                            }
                         }
-                        realFrom = Float.parseFloat(token.getTokenContents());
-                        if(matchAndRemove(Token.tokenType.TO) == null){
-                            throw new SyntaxErrorException("no to keyword found int type limits declaration at line: " + peek(0).getTokenLine());
+                        while (!variableNames.isEmpty()) {
+                            variablesList.add(new VariableNode(
+                                    variableNames.remove(),
+                                    token.getTokenType().toString(),
+                                    true));
                         }
-                        token = matchAndRemove(Token.tokenType.NUMBER);
-                        if(token == null){
-                            throw new SyntaxErrorException("number expected after to in type limit declaration at line: " + peek(0).getTokenLine());
+                        break;
+                    case REAL:
+                        if(peek(0).getTokenType() == Token.tokenType.FROM){
+                            matchAndRemove(Token.tokenType.FROM);
+                            fromto = matchAndRemove(Token.tokenType.NUMBER);
+                            if(fromto == null){
+                                throw new SyntaxErrorException("number expected after from in type limit declaration at line: " + peek(0).getTokenLine());
+                            }
+                            realFrom = Float.parseFloat(fromto.getTokenContents());
+                            if(matchAndRemove(Token.tokenType.TO) == null){
+                                throw new SyntaxErrorException("no to keyword found int type limits declaration at line: " + peek(0).getTokenLine());
+                            }
+                            fromto = matchAndRemove(Token.tokenType.NUMBER);
+                            if(fromto == null){
+                                throw new SyntaxErrorException("number expected after to in type limit declaration at line: " + peek(0).getTokenLine());
+                            }
+                            realtTo = Float.parseFloat(fromto.getTokenContents());
+                            while(!variableNames.isEmpty()){
+                                variablesList.add(new VariableNode(variableNames.remove(), token.getTokenType().toString(), realFrom, realtTo, true));
+                            }
                         }
-                        realtTo = Float.parseFloat(token.getTokenContents());
-                        while(!variableNames.isEmpty()){
-                            variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.REAL, realFrom, realtTo, true));
+                        while (!variableNames.isEmpty()) {
+                            variablesList.add(new VariableNode(
+                                    variableNames.remove(),
+                                    token.getTokenType().toString(),
+                                    true));
                         }
-                    }
-                    while (!variableNames.isEmpty()) {
-                        variablesList.add(new VariableNode(
-                                variableNames.remove(),
-                                VariableNode.VariableType.REAL,
-                                true));
-                    }
-                } else {
-                    token = matchAndRemove(Token.tokenType.BOOLEAN);
-                }
+                        break;
 
-                if (token != null && !variableNames.isEmpty()) {
-                    while (!variableNames.isEmpty()) {
-                        variablesList.add(new VariableNode(
-                                variableNames.remove(),
-                                VariableNode.VariableType.BOOLEAN,
-                                true));
-                    }
-                } else {
-                    token = matchAndRemove(Token.tokenType.CHARACTERLITERAL);
-                }
-
-                if (token != null && !variableNames.isEmpty()) {
-                    while (!variableNames.isEmpty()) {
-                        variablesList.add(new VariableNode(variableNames.remove(),
-                                VariableNode.VariableType.CHARACTER,
-                                true));
-                    }
-                } else {
-                    token = matchAndRemove(Token.tokenType.STRINGLITERAL);
-                }
-
-                if (token != null && !variableNames.isEmpty()) {
-                    if(peek(0).getTokenType() == Token.tokenType.FROM){
-                        matchAndRemove(Token.tokenType.FROM);
-                        token = matchAndRemove(Token.tokenType.NUMBER);
-                        if(token == null){
-                            throw new SyntaxErrorException("number expected after from in type limit declaration at line: " + peek(0).getTokenLine());
-                        }
-                        from = Integer.parseInt(token.getTokenContents());
-                        if(matchAndRemove(Token.tokenType.TO) == null){
-                            throw new SyntaxErrorException("no to keyword found int type limits declaration at line: " + peek(0).getTokenLine());
-                        }
-                        token = matchAndRemove(Token.tokenType.NUMBER);
-                        if(token == null){
-                            throw new SyntaxErrorException("number expected after to in type limit declaration at line: " + peek(0).getTokenLine());
-                        }
-                        to = Integer.parseInt(token.getTokenContents());
-                        while(!variableNames.isEmpty()){
-                            variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.STRING, from, to, true, false));
-                        }
-                    }
-                    while (!variableNames.isEmpty()) {
-                        variablesList.add(new VariableNode(variableNames.remove(),
-                                VariableNode.VariableType.STRING,
-                                true));
-                    }
-                } else {
-                    token = matchAndRemove(Token.tokenType.ARRAY);
-                }
-
-                if (token != null && !variableNames.isEmpty() && Objects.equals(variableNames.peekFirst(), variableNames.peekLast())) {
-
-                    token = matchAndRemove(Token.tokenType.FROM);
-                    if (token != null) {
-                        token = matchAndRemove(Token.tokenType.NUMBER);
+                    case ARRAY:
+                        token = matchAndRemove(Token.tokenType.FROM);
                         if (token != null) {
-                            from = Integer.parseInt(token.getTokenContents());
+                            token = matchAndRemove(Token.tokenType.NUMBER);
+                            if (token != null) {
+                                from = Integer.parseInt(token.getTokenContents());
+                            } else {
+                                throw new SyntaxErrorException("integer is expected after from at line " + peek(0).getTokenLine());
+                            }
+
                         } else {
-                            throw new SyntaxErrorException("integer is expected after from at line " + peek(0).getTokenLine());
+                            throw new SyntaxErrorException("from expected after array is declared at line " + peek(0).getTokenLine());
                         }
 
-                    } else {
-                        throw new SyntaxErrorException("from expected after array is declared at line " + peek(0).getTokenLine());
-                    }
-
-                    token = matchAndRemove(Token.tokenType.TO);
-                    if (token != null) {
-                        token = matchAndRemove(Token.tokenType.NUMBER);
+                        token = matchAndRemove(Token.tokenType.TO);
                         if (token != null) {
-                            to = Integer.parseInt(token.getTokenContents());
+                            token = matchAndRemove(Token.tokenType.NUMBER);
+                            if (token != null) {
+                                to = Integer.parseInt(token.getTokenContents());
+                            } else {
+                                throw new SyntaxErrorException("integer is expected after to at line " + peek(0).getTokenLine());
+                            }
                         } else {
-                            throw new SyntaxErrorException("integer is expected after to at line " + peek(0).getTokenLine());
+                            throw new SyntaxErrorException("to is expected after from index is declared at line " + peek(0).getTokenLine());
                         }
-                    } else {
-                        throw new SyntaxErrorException("to is expected after from index is declared at line " + peek(0).getTokenLine());
-                    }
 
-                    token = matchAndRemove(Token.tokenType.OF);
-                    if (token != null) {
-                        switch (peek(0).getTokenType()) {
-                            case INTEGER:
-                                token = matchAndRemove(Token.tokenType.INTEGER);
-                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.INTEGER, from, to, true, true));
-                                break;
-                            case REAL:
-                                token = matchAndRemove(Token.tokenType.REAL);
-                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.REAL, from, to, true, true));
-                                break;
-                            case BOOLEAN:
-                                token = matchAndRemove(Token.tokenType.BOOLEAN);
-                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.BOOLEAN, from, to, true, true));
-                                break;
-                            case CHARACTERLITERAL:
-                                token = matchAndRemove(Token.tokenType.CHARACTERLITERAL);
-                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.CHARACTER, from, to, true, true));
-                                break;
-                            case STRINGLITERAL:
-                                token = matchAndRemove(Token.tokenType.STRINGLITERAL);
-                                variablesList.add(new VariableNode(variableNames.remove(), VariableNode.VariableType.STRING, from, to, true, true));
-                                break;
-
+                        token = matchAndRemove(Token.tokenType.OF);
+                        if (token != null) {
+                            token = matchAndRemove(peek(0).getTokenType());
+                            while(!variableNames.isEmpty()) {
+                                variablesList.add(new VariableNode(variableNames.remove(), token.getTokenType().toString(), from, to, true, true));
+                            }
                         }
-                    }
-                } else if (variablesList.isEmpty()) {
-                    throw new SyntaxErrorException("no valid data type found after variable at line " + peek(0).getTokenLine());
+                        else{
+                            throw new SyntaxErrorException("keyword of expected in array variable declaration at line " + peek(0).getTokenLine());
+                        }
+                        break;
+
+                    case CHARACTER:
+                    case BOOLEAN:
+                        while (!variableNames.isEmpty()) {
+                            variablesList.add(new VariableNode(
+                                    variableNames.remove(),
+                                    token.getTokenType().toString(),
+                                    true));
+                        }
+                        break;
+                    default: throw new SyntaxErrorException("invalid data type being assigned to variables at line " + peek(0).getTokenLine());
                 }
             } else {
                 throw new SyntaxErrorException("':' is expected after varibles are declared at line " + peek(0).getTokenLine());
