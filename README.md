@@ -15,14 +15,9 @@ Make a new .shank file, write and save the code, compile the program and pass in
 
 ---
 
-## Program Contents
+## Program Components
 
 ![image](https://user-images.githubusercontent.com/128118033/233144475-495cadb5-1171-4619-bc58-8f6cb9de350c.png)
-
-### *[Lexer](https://github.com/rmcs9/311compiler/edit/main/README.md#lexer)*
-### *[Parser](https://github.com/rmcs9/311compiler/edit/main/README.md#parser-1)*
-### *[Interpreter](https://github.com/rmcs9/311compiler/edit/main/README.md#interpreter-1)*
-
 ---
 ## TO-DO's 
 
