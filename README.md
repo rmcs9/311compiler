@@ -19,16 +19,6 @@ Make a new .shank file, write and save the code, compile the program and pass in
 
 ![image](https://user-images.githubusercontent.com/128118033/233144475-495cadb5-1171-4619-bc58-8f6cb9de350c.png)
 ---
-## TO-DO's 
-
-- [ ] finish README
-- [ ] Interpreter.InterpretFunction cleanup
-- [ ] var handling exceptions
-- [x] Interpreter.InterpretFunctionCall cleanup
-- [x] Parser.boolCompare cleanup
-- [x] Parser.ParameterDeclarations, Variables, Constants cleanup
-
----
 ## Lexer
 ![image](https://user-images.githubusercontent.com/128118033/233201192-441e6168-b23a-42f3-93c4-6bee5689d9d8.png)
 
@@ -47,6 +37,16 @@ Make a new .shank file, write and save the code, compile the program and pass in
 ![image](https://user-images.githubusercontent.com/128118033/233218720-7841b072-34df-449b-b399-31cf78aa7f38.png)
 ![image](https://user-images.githubusercontent.com/128118033/233220028-9fcc7e86-09d0-458b-875e-cd598aa04ee5.png)
 ![image](https://user-images.githubusercontent.com/128118033/233220606-ddf49fd5-1545-427a-9d0c-41293a760a67.png)
+
+---
+## TO-DO's 
+
+- [ ] finish README
+- [ ] Interpreter.InterpretFunction cleanup
+- [ ] var handling exceptions
+- [x] Interpreter.InterpretFunctionCall cleanup
+- [x] Parser.boolCompare cleanup
+- [x] Parser.ParameterDeclarations, Variables, Constants cleanup
 
 
 
