@@ -3,7 +3,7 @@
 
 ## What is Shank?
 "Shank" is a programming language created by Michael Phipps, a professor at UAlbany. 
-Shank draws many design concepts and features from other popular programming langauges, including C#, javascript, Python and more. 
+Shank draws many design concepts and features from other popular programming langauges, mainly, pascal. 
 Read more about Shank and its design in the attached langauge definition below:
 
 
